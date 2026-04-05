@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0A0A0F;
+  --bg-sidebar: #12121A;
+  --bg-card: #1A1A28;
+  --bg-hover: #252538;
+  --border: rgba(255, 45, 120, 0.15);
+  --border-bright: rgba(255, 45, 120, 0.35);
+  --text: #F0F0FF;
+  --text-secondary: rgba(240, 240, 255, 0.5);
+  --text-muted: rgba(240, 240, 255, 0.25);
+  --pink: #FF2D78;
+  --pink-light: #FF6EC7;
+  --purple: #BF00FF;
+  --purple-mid: #9B30FF;
+  --gradient: linear-gradient(135deg, #FF2D78, #BF00FF);
+  --gradient-soft: linear-gradient(135deg, rgba(255,45,120,0.15), rgba(191,0,255,0.15));
+  --glass: rgba(255, 45, 120, 0.06);
+  --glass-border: rgba(255, 45, 120, 0.2);
+  --success: #00E5A0;
+  --warning: #FFB800;
+  --error: #FF4560;
+  --info: #00CFFF;
+  --sans: system-ui, 'Segoe UI', sans-serif;
+  font-family: var(--sans);
+  color: var(--text);
+  background: var(--bg);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { min-height: 100vh; background: var(--bg); overflow-x: hidden; }
+html, body, #root { height: 100%; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-card); }
+::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 4px; }
+::selection { background: var(--pink); color: #fff; }
+:focus-visible { outline: 2px solid var(--pink); outline-offset: 2px; }
+
+.gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+}
+
+.gradient-btn {
+  background: var(--gradient);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: 10px;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.gradient-btn:hover { opacity: 0.9; }
+.gradient-btn:active { transform: scale(0.98); }
+
+.glow {
+  box-shadow: 0 0 20px rgba(255, 45, 120, 0.3),
+              0 0 60px rgba(191, 0, 255, 0.15);
+}

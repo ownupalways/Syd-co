@@ -1,0 +1,117 @@
+{
+	"editor.matchBrackets": "always",
+	"terminal.integrated.defaultProfile.windows": "Git Bash",
+	"editor.linkedEditing": true,
+	"security.workspace.trust.untrustedFiles": "open",
+	"cSpell.userWords": [
+		"Apete",
+		"authentixuser",
+		"comejesus",
+		"countingapp",
+		"dbase",
+		"defaultsauto",
+		"dexterpearl",
+		"donot",
+		"HBTUSH",
+		"Hbtushcomsat",
+		"Oluwadipe",
+		"rateapp",
+		"resave",
+		"SOLUXIONS",
+		"thingstodo",
+		"turkishallluxuries"
+	],
+	"eslint.format.enable": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "explicit",
+		"editor.formatTab": "explicit"
+	},
+	"explorer.confirmDelete": false,
+	"json.schemas": [],
+	"git.enableSmartCommit": true,
+	"editor.minimap.size": "fit",
+	"liveServer.settings.AdvanceCustomBrowserCmdLine": "",
+	"liveServer.settings.fullReload": true,
+	"liveServer.settings.useLocalIp": true,
+	"liveServer.settings.root": "/",
+	"editor.tabCompletion": "on",
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"notebook.insertFinalNewline": true,
+	"liveServer.settings.donotShowInfoMsg": true,
+	"editor.wordWrap": "on",
+	"workbench.editor.wrapTabs": true,
+	"notebook.output.wordWrap": true,
+	"chat.editor.wordWrap": "on",
+	"liveServer.settings.ChromeDebuggingAttachment": false,
+	"liveServer.settings.donotVerifyTags": true,
+	"workbench.settings.applyToAllProfiles": [],
+	"npm.keybindingsChangedWarningShown": true,
+	"workbench.colorTheme": "Visual Studio Dark",
+	"prettier.endOfLine": "auto",
+	"prettier.htmlWhitespaceSensitivity": "strict",
+	"prettier.bracketSameLine": true,
+	"prettier.enableDebugLogs": true,
+	"prettier.withNodeModules": true,
+	"prettier.useTabs": true,
+	"prettier.proseWrap": "always",
+	"prettier.printWidth": 50,
+	"js/ts.updateImportsOnFileMove.enabled": "always",
+	"files.autoSave": "afterDelay",
+	"editor.codeActions.triggerOnFocusChange": true,
+	"notebook.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnPaste": true,
+	"editor.formatOnType": true,
+	"workbench.editor.labelFormat": "short",
+	"notebook.formatOnCellExecution": true,
+	"notebook.formatOnSave.enabled": true,
+	"cSpell.autoFormatConfigFile": true,
+	"mssql.enableQueryHistoryCapture": false,
+	"mssql.enableRichExperiences": true,
+	"editor.formatOnSave": true,
+	"purecode-ai.enableTabAutocomplete": false,
+	"editor.cursorBlinking": "expand",
+	"editor.find.cursorMoveOnType": false,
+	"terminal.integrated.altClickMovesCursor": false,
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.autopep8"
+	},
+	"git.openRepositoryInParentFolders": "never",
+	"github.copilot.nextEditSuggestions.enabled": true,
+	"workbench.productIconTheme": "material-product-icons",
+	"material-ui-snippets.showNotesOnStartup": false,
+	"mdb.mcp.server": "prompt",
+	"workbench.editor.enablePreview": false,
+	"chat.tools.terminal.autoApprove": {
+		"bash": true,
+		"true": true
+	},
+	"mssql.connectionGroups": [
+		{
+			"name": "ROOT",
+			"id": "ROOT"
+		}
+	],
+	"git.confirmSync": false,
+	"js/ts.tsserver.watchOptions": {
+		"excludeDirectories": ["node_modules"]
+	},
+	"window.menuBarVisibility": "compact",
+	"files.associations": {
+		"*.css": "tailwindcss",
+		"*.sql": "sql"
+	},
+	"css.validate": false,
+	"tailwindCSS.includeLanguages": {
+		"typescript": "javascript",
+		"typescriptreact": "javascript"
+	},
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
+	"editor.accessibilitySupport": "off",
+	"terminal.integrated.initialHint": false,
+	"workbench.secondarySideBar.defaultVisibility": "hidden",
+	"json.schemaDownload.enable": false
+}

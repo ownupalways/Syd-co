@@ -1,0 +1,259 @@
+.navbar {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	width: 100%;
+	box-shadow: 0 4px 20px rgba(230, 91, 168, 0.2);
+	transition: all 0.3s ease;
+}
+
+.navbar-container {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 1rem 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 2rem;
+}
+
+/* Logo Section */
+.navbar-logo {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex-shrink: 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+	text-decoration: none;
+	cursor: pointer;
+	transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+	transform: scale(1.05);
+}
+
+.logo-icon {
+	font-size: 1.75rem;
+}
+
+.logo-text {
+	background: linear-gradient(
+		135deg,
+		#e65ba8 0%,
+		#ffb6d9 100%
+	);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+/* Navigation Menu */
+.nav-menu {
+	display: flex;
+	list-style: none;
+	gap: 2rem;
+	margin: 0;
+	padding: 0;
+	flex: 1;
+	justify-content: center;
+	border-radius: 50px;
+	backdrop-filter: blur(10px);
+	padding: 0.5rem 2rem;
+	transition: all 0.3s ease;
+}
+
+.nav-item {
+	position: relative;
+}
+
+.nav-link {
+	text-decoration: none;
+	font-weight: 500;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+	position: relative;
+	padding-bottom: 0.25rem;
+}
+
+.nav-link::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background: linear-gradient(
+		90deg,
+		#e65ba8,
+		#ffb6d9
+	);
+	transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+	width: 100%;
+}
+
+/* Right Section */
+.navbar-right {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex-shrink: 0;
+}
+
+/* Cart Button */
+.cart-button {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.625rem 1rem;
+	border: 2px solid;
+	border-radius: 25px;
+	background: transparent;
+	font-size: 1.1rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-weight: 600;
+}
+
+.cart-button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(230, 91, 168, 0.3);
+}
+
+.cart-icon {
+	font-size: 1.3rem;
+}
+
+.cart-badge {
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	background: linear-gradient(
+		135deg,
+		#e65ba8 0%,
+		#ffb6d9 100%
+	);
+	color: white;
+	font-weight: 700;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.75rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.625rem 1.25rem;
+	border: 2px solid;
+	border-radius: 25px;
+	font-weight: 700;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(230, 91, 168, 0.25);
+}
+
+.theme-toggle:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 25px rgba(230, 91, 168, 0.4);
+}
+
+.theme-icon {
+	font-size: 1.2rem;
+	animation: spin 0.6s ease-in-out;
+}
+
+.theme-toggle:hover .theme-icon {
+	animation: spin 0.6s ease-in-out;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.theme-text {
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.navbar-container {
+		padding: 1rem;
+		gap: 1rem;
+	}
+
+	.nav-menu {
+		gap: 1rem;
+		padding: 0.5rem 1rem;
+	}
+
+	.nav-link {
+		font-size: 0.9rem;
+	}
+
+	.navbar-logo {
+		font-size: 1.25rem;
+	}
+
+	.logo-icon {
+		font-size: 1.5rem;
+	}
+
+	.theme-text {
+		display: none;
+	}
+
+	.theme-toggle {
+		padding: 0.625rem;
+		min-width: 45px;
+	}
+
+	.cart-button {
+		padding: 0.625rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.nav-menu {
+		gap: 0.75rem;
+		padding: 0.5rem 0.75rem;
+	}
+
+	.nav-link {
+		font-size: 0.8rem;
+	}
+
+	.navbar-container {
+		flex-wrap: wrap;
+	}
+
+	.navbar-right {
+		width: 100%;
+		justify-content: flex-end;
+	}
+}
+
+/* Smooth transition for theme changes */
+[data-theme] * {
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease,
+		border-color 0.3s ease;
+}
