@@ -54,7 +54,7 @@ const ProductDetailPage: React.FC = () => {
           {/* Images */}
           <div>
             <img src={images[activeImg]} alt={product.name} style={{
-              width: '100%', borderRadius: '12px', objectFit: 'cover',
+              width: 'auto', borderRadius: '12px', objectFit: 'contain',
               aspectRatio: '1', border: `1px solid ${t.border}`,
             }} />
             {images.length > 1 && (

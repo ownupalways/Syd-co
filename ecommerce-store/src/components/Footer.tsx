@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/useTheme'
 import { theme } from '../styles/theme'
-import sydLogo from '../assets/syd-logo.png'
+import sydLogo from '../assets/syd-hero.png'
 import { Heart, Send } from 'lucide-react'
 
 export const Footer: React.FC = () => {
@@ -123,7 +123,7 @@ export const Footer: React.FC = () => {
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: '60px 24px 40px',
+          padding: '20px 24px 40px',
         }}>
           <div style={{
             display: 'grid',
@@ -136,7 +136,7 @@ export const Footer: React.FC = () => {
               <img
                 src={sydLogo}
                 alt="Syd & Co"
-                style={{ height: '52px', objectFit: 'contain', marginBottom: '16px' }}
+                style={{ height: '82px', width: 'auto', borderRadius: '50%', objectFit: 'cover', marginBottom: '16px' }}
               />
               <p style={{
                 color: t.textSecondary, fontSize: '14px',
