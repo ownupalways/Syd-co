@@ -115,6 +115,7 @@ export const getMe = async (req: Request, res: Response): Promise<void> => {
             phone: user.phone,
             avatar: user.avatar,
             role: user.role,
+            address: user.address,
         });
     } catch (_error) {
         sendError(res, 'Failed to fetch user', 500);

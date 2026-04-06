@@ -6,6 +6,15 @@ export interface IUser extends Document {
   password: string;
   phone?: string;
   avatar?: string;
+  address?: {
+    fullName: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
   role: 'user' | 'admin';
   isActive: boolean;
   createdAt: Date;
@@ -36,6 +45,18 @@ const userSchema = new Schema<IUser>(
       type: String,
       trim: true,
     },
+    address: {
+  type: {
+    fullName: { type: String },
+    phone: { type: String },
+    address: { type: String },
+    city: { type: String },
+    state: { type: String },
+    zipCode: { type: String },
+    country: { type: String },
+  },
+  default: undefined,
+},
     avatar: {
       type: String,
     },

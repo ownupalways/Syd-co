@@ -29,5 +29,17 @@ export const loginApi = (data: {
 		data,
 	);
 
-export const getMeApi = () =>
-	api.get<ApiResponse<User>>("/auth/me");
+	export const saveAddressApi = (data: {
+		fullName: string;
+		phone: string;
+		address: string;
+		city: string;
+		state: string;
+		zipCode: string;
+		country: string;
+	}) => api.put("/auth/address", data);
+
+	export const getMeApi = () =>
+		api.get<ApiResponse<User>>("/auth/me");
+
+
