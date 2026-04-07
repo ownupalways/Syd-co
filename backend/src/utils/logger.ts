@@ -1,8 +1,7 @@
 import winston from 'winston';
-import { config } from '@config'; // make sure this actually exports logLevel
+import { config } from '@config';
 import dotenv from 'dotenv';
-
-dotenv.config(); // Load environment variables first
+dotenv.config();
 
 const levels = {
   error: 0,
@@ -31,18 +30,28 @@ const format = winston.format.combine(
   ),
 );
 
-const transports = [
+const isVercel = process.env.VERCEL === '1';
+
+const transports: winston.transport[] = [
   new winston.transports.Console(),
-  new winston.transports.File({
-    filename: 'logs/error.log',
-    level: 'error',
-  }),
-  new winston.transports.File({
-    filename: 'logs/all.log',
-  }),
 ];
 
-// Safe default for logLevel
+if (!isVercel) {
+  const fs = require('fs');
+  if (!fs.existsSync('logs')) {
+    fs.mkdirSync('logs', { recursive: true });
+  }
+  transports.push(
+    new winston.transports.File({
+      filename: 'logs/error.log',
+      level: 'error',
+    }),
+    new winston.transports.File({
+      filename: 'logs/all.log',
+    }),
+  );
+}
+
 const logLevel = config?.logLevel || process.env.LOG_LEVEL || 'info';
 
 export const logger = winston.createLogger({
