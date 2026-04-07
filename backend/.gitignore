@@ -58,3 +58,5 @@ temp/
 # OS temp files
 *.zip
 *.rar
+.vercel
+.env*.local
