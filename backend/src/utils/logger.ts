@@ -1,4 +1,5 @@
 import winston from 'winston';
+import fs from 'fs';
 import { config } from '@config';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -37,7 +38,6 @@ const transports: winston.transport[] = [
 ];
 
 if (!isVercel) {
-  const fs = require('fs');
   if (!fs.existsSync('logs')) {
     fs.mkdirSync('logs', { recursive: true });
   }
