@@ -2,13 +2,25 @@ import { Request, Response } from 'express';
 import { Product } from '@models/Product';
 import { sendSuccess, sendError, sendPaginatedResponse } from '@utils/response';
 import { AdminRequest } from '@middleware/adminAuth';
-import { logAction } from '@utils/auditLogger';
+import { logAction, createPendingAction } from '@utils/auditLogger';
+import { notifySuperAdmins } from '@utils/socketManager';
 
-export const createProduct = async (req: AdminRequest, res: Response): Promise<void> => {
+export const createProduct = async (
+  req: AdminRequest,
+  res: Response,
+): Promise<void> => {
   try {
     const {
-      name, description, price, originalPrice,
-      category, image, images, stock, seller,
+      name,
+      description,
+      price,
+      originalPrice,
+      category,
+      image,
+      images,
+      stock,
+      seller,
+      isBestSeller,
     } = req.body;
 
     if (!name || !description || !price || !category || !image || !seller) {
@@ -16,19 +28,54 @@ export const createProduct = async (req: AdminRequest, res: Response): Promise<v
       return;
     }
 
-    const product = await Product.create({
-      name, description,
+    const payload = {
+      name,
+      description,
       price: Number(price),
       originalPrice: originalPrice ? Number(originalPrice) : undefined,
-      category, image,
+      category,
+      image,
       images: images || [],
       stock: Number(stock) || 0,
       seller,
-    });
+      isBestSeller: isBestSeller || false,
+    };
 
-    // Log the action with admin name
-    await logAction(req, 'CREATE_PRODUCT', 'Product',
-      { name, price, category }, String(product._id));
+    // Sub-admin actions go to pending queue
+    if (req.adminRole === 'sub-admin') {
+      const pendingId = await createPendingAction(
+        req,
+        'CREATE_PRODUCT',
+        'Product',
+        payload,
+      );
+
+      // Notify super admins in real-time
+      notifySuperAdmins('pending-action', {
+        adminName: req.adminName,
+        action: 'CREATE_PRODUCT',
+        resource: 'Product',
+        pendingId,
+      });
+
+      sendSuccess(
+        res,
+        'Product creation submitted for approval',
+        { pendingId },
+        202,
+      );
+      return;
+    }
+
+    // Super admin — execute immediately
+    const product = await Product.create(payload);
+    await logAction(
+      req,
+      'CREATE_PRODUCT',
+      'Product',
+      payload,
+      String(product._id),
+    );
 
     sendSuccess(res, 'Product created successfully', product, 201);
   } catch (_error) {
@@ -36,41 +83,117 @@ export const createProduct = async (req: AdminRequest, res: Response): Promise<v
   }
 };
 
-export const updateProduct = async (req: AdminRequest, res: Response): Promise<void> => {
+export const updateProduct = async (
+  req: AdminRequest,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
+
+    // Sub-admin actions go to pending queue
+    if (req.adminRole === 'sub-admin') {
+      const pendingId = await createPendingAction(
+        req,
+        'UPDATE_PRODUCT',
+        'Product',
+        req.body,
+        id,
+      );
+
+      notifySuperAdmins('pending-action', {
+        adminName: req.adminName,
+        action: 'UPDATE_PRODUCT',
+        resource: 'Product',
+        pendingId,
+      });
+
+      sendSuccess(
+        res,
+        'Product update submitted for approval',
+        { pendingId },
+        202,
+      );
+      return;
+    }
+
     const product = await Product.findByIdAndUpdate(id, req.body, {
-      new: true, runValidators: true,
+      new: true,
+      runValidators: true,
     });
 
-    if (!product) { sendError(res, 'Product not found', 404); return; }
+    if (!product) {
+      sendError(res, 'Product not found', 404);
+      return;
+    }
 
     await logAction(req, 'UPDATE_PRODUCT', 'Product', req.body, id);
-
     sendSuccess(res, 'Product updated successfully', product);
   } catch (_error) {
     sendError(res, 'Failed to update product', 500);
   }
 };
 
-export const deleteProduct = async (req: AdminRequest, res: Response): Promise<void> => {
+export const deleteProduct = async (
+  req: AdminRequest,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
+
+    // Sub-admin actions go to pending queue
+    if (req.adminRole === 'sub-admin') {
+      const pendingId = await createPendingAction(
+        req,
+        'DELETE_PRODUCT',
+        'Product',
+        { productId: id },
+        id,
+      );
+
+      notifySuperAdmins('pending-action', {
+        adminName: req.adminName,
+        action: 'DELETE_PRODUCT',
+        resource: 'Product',
+        pendingId,
+      });
+
+      sendSuccess(
+        res,
+        'Product deletion submitted for approval',
+        { pendingId },
+        202,
+      );
+      return;
+    }
+
     const product = await Product.findByIdAndUpdate(
-      id, { isActive: false }, { new: true }
+      id,
+      { isActive: false },
+      { new: true },
     );
 
-    if (!product) { sendError(res, 'Product not found', 404); return; }
+    if (!product) {
+      sendError(res, 'Product not found', 404);
+      return;
+    }
 
-    await logAction(req, 'DELETE_PRODUCT', 'Product', { name: product.name }, id);
-
+    await logAction(
+      req,
+      'DELETE_PRODUCT',
+      'Product',
+      { name: product.name },
+      id,
+    );
     sendSuccess(res, 'Product deleted successfully');
   } catch (_error) {
     sendError(res, 'Failed to delete product', 500);
   }
 };
 
-export const getProducts = async (req: Request, res: Response): Promise<void> => {
+export const getProducts = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const page = parseInt(req.query['page'] as string) || 1;
     const limit = parseInt(req.query['limit'] as string) || 12;
@@ -87,13 +210,23 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
       Product.countDocuments(query),
     ]);
 
-    sendPaginatedResponse(res, products, page, limit, total, 'Products fetched successfully');
+    sendPaginatedResponse(
+      res,
+      products,
+      page,
+      limit,
+      total,
+      'Products fetched successfully',
+    );
   } catch (_error) {
     sendError(res, 'Failed to fetch products', 500);
   }
 };
 
-export const getProductById = async (req: Request, res: Response): Promise<void> => {
+export const getProductById = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     const { id } = req.params;
     const product = await Product.findById(id);

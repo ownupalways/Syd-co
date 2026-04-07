@@ -18,13 +18,9 @@ import { logger } from "@utils/logger";
 import authRoutes from '@routes/auth';
 import productRoutes from '@routes/products';
 import uploadRoutes from '@routes/upload';
-
-
-
+import newsletterRoutes from '@routes/newsletter';
 import adminAuthRoutes from '@routes/admin/auth';
-
 import pendingActionsRoutes from '@routes/admin/pendingActions';
-
 import auditLogsRoutes from '@routes/admin/auditLogs';
 import ordersRoutes from '@routes/orders';
 
@@ -107,7 +103,7 @@ app.use(`${config.apiPrefix}/admin/auth`, adminAuthRoutes);
 app.use(`${config.apiPrefix}/admin/pending`, pendingActionsRoutes);
 app.use(`${config.apiPrefix}/admin/audit`, auditLogsRoutes);
 app.use(`${config.apiPrefix}/orders`, ordersRoutes);
-
+app.use(`${config.apiPrefix}/newsletter`, newsletterRoutes);
 
 // ========================
 // Error Handling

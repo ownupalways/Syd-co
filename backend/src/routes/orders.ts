@@ -5,6 +5,9 @@ import { Product } from '@models/Product';
 import { protect, AuthRequest } from '@middleware/authMiddleware';
 import { sendSuccess, sendError } from '@utils/response';
 import { config } from '@config';
+import { sendEmail, emailTemplates } from '@utils/emailService';
+import { User } from '@models/User';
+import { notifySuperAdmins } from '@utils/socketManager';
 
 const router = Router();
 
@@ -64,7 +67,14 @@ router.post('/payment-intent', protect, async (req: AuthRequest, res: Response):
 // Create order after payment
 router.post('/', protect, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { items, shippingAddress, paymentIntentId, total, subtotal, shippingCost } = req.body;
+    const {
+      items,
+      shippingAddress,
+      paymentIntentId,
+      total,
+      subtotal,
+      shippingCost,
+    } = req.body;
 
     // Verify payment intent
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -106,11 +116,54 @@ router.post('/', protect, async (req: AuthRequest, res: Response): Promise<void>
       stripePaymentId: paymentIntent.id,
     });
 
-    sendSuccess(res, 'Order placed successfully', {
-      orderId: order._id,
-      status: order.status,
-      total: order.total,
-    }, 201);
+    
+    const orderUser = await User.findById(req.userId);
+    if (orderUser) {
+      // Email to customer
+      await sendEmail({
+        to: orderUser.email,
+        subject: '🎉 Order Confirmed — Syd & Co',
+        html: emailTemplates.orderConfirmed(
+          orderUser.name,
+          String(order._id),
+          order.total,
+          orderItems.map((i) => ({
+            name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+          })),
+        ),
+      });
+
+      // Email to super admin
+      await sendEmail({
+        to: config.email.superAdminEmail,
+        subject: '🛍️ New Order Received — Syd & Co',
+        html: emailTemplates.adminNewOrder(
+          String(order._id),
+          order.total,
+          orderUser.name,
+        ),
+      });
+
+      // Real-time notification to all admins
+      notifySuperAdmins('new-order', {
+        orderId: order._id,
+        total: order.total,
+        userName: orderUser.name,
+      });
+    }
+
+    sendSuccess(
+      res,
+      'Order placed successfully',
+      {
+        orderId: order._id,
+        status: order.status,
+        total: order.total,
+      },
+      201,
+    );
   } catch (_error) {
     sendError(res, 'Failed to create order', 500);
   }

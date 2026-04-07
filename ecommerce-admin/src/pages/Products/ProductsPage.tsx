@@ -36,15 +36,27 @@ const ProductsPage: React.FC = () => {
 		: [];
  const pagination = data?.data?.pagination;
   
-  const createMutation = useMutation({
-    mutationFn: (payload: Record<string, unknown>) => createProductApi(payload),
-    onSuccess: () => {
-      toast.success('Product created!')
-      qc.invalidateQueries({ queryKey: ['admin-products-list'] })
-      resetForm()
-    },
-    onError: () => toast.error('Failed to create product'),
-  })
+ const createMutation = useMutation({
+		mutationFn: (
+			payload: Record<string, unknown>,
+		) => createProductApi(payload),
+		onSuccess: (res) => {
+			const message = res.data.message;
+			if (message.includes("approval")) {
+				toast.success(
+					"Product submitted for super-admin approval! ⏳",
+				);
+			} else {
+				toast.success("Product created!");
+			}
+			qc.invalidateQueries({
+				queryKey: ["admin-products-list"],
+			});
+			resetForm();
+		},
+		onError: () =>
+			toast.error("Failed to create product"),
+ });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Product> }) => updateProductApi(id, data),

@@ -7,6 +7,7 @@ import { logAction } from '@utils/auditLogger';
 import { notifySuperAdmins } from '@utils/socketManager';
 import { adminProtect, superAdminOnly, AdminRequest } from '@middleware/adminAuth';
 import { config } from '@config';
+import { sendEmail, emailTemplates } from '@utils/emailService';
 
 const router = Router();
 
@@ -16,8 +17,8 @@ const generateAdminToken = (id: string, role: string): string =>
 // Register sub-admin
 router.post('/register', async (req: AdminRequest, res: Response): Promise<void> => {
   try {
-    const { name, email, password, phone } = req.body;
-
+    const { action, reason, name, email, password, phone } = req.body;
+    
     if (!name || !email || !password) {
       sendError(res, 'Name, email and password are required', 400);
       return;
@@ -36,7 +37,8 @@ router.post('/register', async (req: AdminRequest, res: Response): Promise<void>
 
     const hashedPassword = await hashPassword(password);
     const admin = await AdminUser.create({
-      name, email,
+      name,
+      email,
       password: hashedPassword,
       phone,
       role: 'sub-admin',
@@ -51,12 +53,39 @@ router.post('/register', async (req: AdminRequest, res: Response): Promise<void>
       createdAt: admin.createdAt,
     });
 
-    sendSuccess(res, 'Registration submitted. Awaiting super-admin approval.', {
-      id: admin._id,
-      name: admin.name,
-      email: admin.email,
-      status: admin.status,
-    }, 201);
+    // Send email to super admin
+    await sendEmail({
+      to: config.email.superAdminEmail,
+      subject: '🔔 New Sub-Admin Access Request — Syd & Co',
+      html: emailTemplates.subAdminRegistered(admin.name),
+    });
+
+    // In the review route, after saving admin, add:
+    if (action === 'approve') {
+      await sendEmail({
+        to: admin.email,
+        subject: '✅ Your Admin Access Has Been Approved — Syd & Co',
+        html: emailTemplates.subAdminApproved(admin.name, admin.permissions),
+      });
+    } else if (action === 'reject') {
+      await sendEmail({
+        to: admin.email,
+        subject: 'Admin Access Request Update — Syd & Co',
+        html: emailTemplates.subAdminRejected(admin.name, reason),
+      });
+    }
+
+    sendSuccess(
+      res,
+      'Registration submitted. Awaiting super-admin approval.',
+      {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        status: admin.status,
+      },
+      201,
+    );
   } catch (_error) {
     sendError(res, 'Registration failed', 500);
   }
@@ -220,5 +249,6 @@ router.put('/sub-admins/:id/review', adminProtect, superAdminOnly, async (req: A
     sendError(res, 'Review failed', 500);
   }
 });
+
 
 export default router;

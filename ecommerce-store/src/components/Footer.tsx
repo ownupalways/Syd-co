@@ -4,6 +4,10 @@ import { useTheme } from '../context/useTheme'
 import { theme } from '../styles/theme'
 import sydLogo from '../assets/syd-hero.png'
 import { Heart, Send } from 'lucide-react'
+import api from "../api/axios";
+import toast from "react-hot-toast";
+
+
 
 export const Footer: React.FC = () => {
   const { isDark } = useTheme()
@@ -12,10 +16,39 @@ export const Footer: React.FC = () => {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
 
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (email) { setSubscribed(true); setEmail('') }
-  }
+
+	const handleSubscribe = async (
+		e: React.FormEvent,
+	) => {
+		e.preventDefault();
+		if (!email) return;
+		try {
+			await api.post("/newsletter/subscribe", {
+				email,
+			});
+			setSubscribed(true);
+			setEmail("");
+			toast.success(
+				"🎉 Subscribed! Check your email for confirmation.",
+			);
+		} catch (err: unknown) {
+			const error = err as {
+				response?: {
+					data?: { message?: string };
+				};
+			};
+			const msg =
+				error.response?.data?.message ||
+				"Subscription failed";
+			if (msg.includes("already")) {
+				toast.error(
+					"This email is already subscribed!",
+				);
+			} else {
+				toast.error(msg);
+			}
+		}
+	};
 
   const sections = [
     {

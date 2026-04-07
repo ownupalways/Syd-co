@@ -39,6 +39,9 @@ export const config = {
     smtpUser: process.env.SMTP_USER,
     smtpPassword: process.env.SMTP_PASSWORD,
     fromName: process.env.SMTP_FROM_NAME || 'Sydney Shopping',
+    // Add inside config object:
+    superAdminEmail:
+      process.env.SUPER_ADMIN_EMAIL || 'superadmin@sydneyshopping.com',
   },
 
   // AWS
