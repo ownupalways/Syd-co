@@ -27,6 +27,9 @@ import ordersRoutes from '@routes/orders';
 
 const app: Express = express();
 
+// Trust Vercel/proxy headers
+app.set('trust proxy', 1);
+
 // ========================
 // Middleware Setup
 // ========================
