@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { CheckCircle, XCircle, Clock, Eye } from 'lucide-react'
+import { CheckCircle, XCircle, Eye } from 'lucide-react'
 import { getPendingActionsApi, reviewPendingActionApi } from '../../api/pending'
 import type { PendingAction } from '../../types'
 import toast from 'react-hot-toast'
