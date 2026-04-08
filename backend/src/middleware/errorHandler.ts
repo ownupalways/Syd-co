@@ -35,12 +35,10 @@ export const errorHandler = (
     });
 };
 
-export const notFoundHandler = (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): void => {
-    const error = new Error(`Not Found - ${req.originalUrl}`);
-    res.status(404);
-    next(error);
+export const notFoundHandler = (req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    status: 404,
+    message: `Not Found - ${req.originalUrl}`,
+  });
 };
