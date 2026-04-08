@@ -1,7 +1,6 @@
 {
-  "compilerOptions": {
+	"compilerOptions": {
 		"types": ["vite/client"],
-		"ignoreDeprecations": "5.0",
 		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
 		"target": "ES2020",
 		"useDefineForClassFields": true,
@@ -18,17 +17,21 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
-		"baseUrl": ".",
+
+		// 1. Add this to satisfy the compiler until you fully migrate later
+		"ignoreDeprecations": "5.0",
+
+		// 2. Ensure ALL paths start with ./
 		"paths": {
-			"@/*": ["src/*"],
-			"@components/*": ["src/components/*"],
-			"@pages/*": ["src/pages/*"],
-			"@store/*": ["src/store/*"],
-			"@api/*": ["src/api/*"],
-			"@hooks/*": ["src/hooks/*"],
-			"@typings/*": ["src/types/*"],
-			"@utils/*": ["src/utils/*"]
+			"@/*": ["./src/*"],
+			"@components/*": ["./src/components/*"],
+			"@pages/*": ["./src/pages/*"],
+			"@store/*": ["./src/store/*"],
+			"@api/*": ["./src/api/*"],
+			"@hooks/*": ["./src/hooks/*"],
+			"@typings/*": ["./src/types/*"],
+			"@utils/*": ["./src/utils/*"]
 		}
 	},
-  "include": ["src"]
+	"include": ["src"]
 }
