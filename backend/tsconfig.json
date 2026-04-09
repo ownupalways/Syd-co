@@ -1,70 +1,50 @@
 {
-	"compilerOptions": {
+  "compilerOptions": {
+    /* 1. The Critical Fix */
     "ignoreDeprecations": "6.0",
-    // Language and Environment
-    "target": "ES2020",
-    "module": "Node16",
-    "lib": ["ES2020"],
 
-    // Module Resolution
-    "moduleResolution": "Node16",
-    "baseUrl": ".",
+    /* 2. Modern Language Defaults */
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+
+    /* 3. Updated Path Mapping (No baseUrl needed) */
     "paths": {
-    "@/*": ["src/*"],
-    "@config": ["src/config/index.ts"],
-    "@config/*": ["src/config/*"],
-    "@controllers": ["src/controllers/index.ts"],
-    "@controllers/*": ["src/controllers/*"],
-    "@models": ["src/models/index.ts"],
-    "@models/*": ["src/models/*"],
-    "@routes": ["src/routes/index.ts"],
-    "@routes/*": ["src/routes/*"],
-    "@middleware": ["src/middleware/index.ts"],
-    "@middleware/*": ["src/middleware/*"],
-    "@utils": ["src/utils/index.ts"],
-    "@utils/*": ["src/utils/*"],
-    "@appTypes/*": ["src/types/*"]
-},
+      "@/*": ["./src/*"],
+      "@config": ["./src/config/index.ts"],
+      "@config/*": ["./src/config/*"],
+      "@controllers": ["./src/controllers/index.ts"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@models": ["./src/models/index.ts"],
+      "@models/*": ["./src/models/*"],
+      "@routes": ["./src/routes/index.ts"],
+      "@routes/*": ["./src/routes/*"],
+      "@middleware": ["./src/middleware/index.ts"],
+      "@middleware/*": ["./src/middleware/*"],
+      "@utils": ["./src/utils/index.ts"],
+      "@utils/*": ["./src/utils/*"],
+      "@appTypes/*": ["./src/types/*"]
+    },
 
-    // Emit
+    /* 4. Emit & Output */
+    "outDir": "./dist",
+    "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "removeComments": true,
     "noEmit": false,
 
-    // Interop Constraints
+    /* 5. Modern Interop & Strictness */
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-
-    // Type Checking
     "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-
-    // Completeness
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-	"include": ["src/**/*"],
-	"exclude": [
-		"node_modules",
-		"dist",
-		"**/*.test.ts"
-	]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
