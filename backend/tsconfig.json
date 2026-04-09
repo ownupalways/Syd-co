@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    /* 1. The Critical Fix */
-    "ignoreDeprecations": "6.0",
+    /* 1. Change this to 5.0 - This is the "magic" fix for TS5103 */
+    "ignoreDeprecations": "5.0",
 
-    /* 2. Modern Language Defaults */
+    /* 2. Modern Settings (Required for TS 6.0) */
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["ES2022"],
 
-    /* 3. Updated Path Mapping (No baseUrl needed) */
+    /* 3. Modern Path Mapping (No baseUrl!) */
     "paths": {
       "@/*": ["./src/*"],
       "@config": ["./src/config/index.ts"],
@@ -27,7 +27,6 @@
       "@appTypes/*": ["./src/types/*"]
     },
 
-    /* 4. Emit & Output */
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
@@ -35,8 +34,6 @@
     "sourceMap": true,
     "removeComments": true,
     "noEmit": false,
-
-    /* 5. Modern Interop & Strictness */
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
