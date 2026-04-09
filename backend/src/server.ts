@@ -33,43 +33,24 @@ app.set("trust proxy", 1);
 // ✅ Security
 app.use(helmet());
 
-// ✅ CORS (Vercel-safe manual headers FIRST)
-app.use((req, res, next) => {
-  const allowedOrigins = config.cors.origin;
-  const origin = req.headers.origin as string | undefined;
-
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-  );
-
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-
-  // ✅ Handle preflight requests early
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-
-  return next(); // ✅ FIX HERE
-});
-// ✅ CORS middleware (backup + validation)
+/// ✅ Unified CORS Configuration (Works for Render, Local, and Vercel)
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, Postman, or curl)
       if (!origin) return callback(null, true);
 
+      // Check if the request origin is in our allowed list
       if (config.cors.origin.includes(origin)) {
-        return callback(null, true);
+        callback(null, true);
       } else {
-        return callback(new Error("Not allowed by CORS"));
+        // Log the denied origin to help you debug if a URL is missing
+        console.warn(`CORS blocked for origin: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
       }
     },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
 );
@@ -94,10 +75,6 @@ app.use(
 
 // ✅ Logging
 app.use(requestLogger);
-
-// ========================
-// ROUTES
-// ========================
 
 // ========================
 // ROUTES
@@ -131,17 +108,6 @@ app.get(`${config.apiPrefix}`, (_req: Request, res: Response) => {
   });
 });
 
-// // API Root
-// app.get(`${config.apiPrefix}/`, (_req: Request, res: Response) => {
-//   res.status(200).json({
-//     success: true,
-//     message: `Welcome to ${config.app.name} API v1`,
-//     endpoints: {
-//       health: "/health",
-//       api: `${config.apiPrefix}/*`,
-//     },
-//   });
-// });
 
 // Feature Routes
 app.use(`${config.apiPrefix}/auth`, authRoutes);
@@ -164,7 +130,7 @@ app.use(errorHandler);
 // SERVER STARTUP
 // ========================
 
-const PORT = config.port;
+const PORT = process.env.PORT || config.port || 5000;
 const NODE_ENV = config.nodeEnv;
 
 const startServer = async () => {
@@ -227,14 +193,7 @@ process.on("SIGINT", () => {
 // START SERVER
 // ========================
 
-// Only run the traditional listen() if NOT on Vercel/Production
-if (process.env.NODE_ENV !== "production") {
   startServer();
-} else {
-  
-  connectDatabase()
-    .then(() => logger.info("Database connected (Production Mode)"))
-    .catch((err) => logger.error("DB connection failed:", err));
-}
+
 
 export default app;
