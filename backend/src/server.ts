@@ -99,7 +99,16 @@ app.use(requestLogger);
 // ROUTES
 // ========================
 
-// Health Check
+// ========================
+// ROUTES
+// ========================
+
+// 1. Absolute Root: Redirects to the API prefix
+app.get('/', (_req, res) => {
+  res.redirect(`${config.apiPrefix}`); 
+});
+
+// 2. Health Check: Important for Vercel deployment monitoring
 app.get("/health", (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
@@ -109,17 +118,30 @@ app.get("/health", (_req: Request, res: Response) => {
   });
 });
 
-// API Root
-app.get(`${config.apiPrefix}/`, (_req: Request, res: Response) => {
+// 3. API Root (e.g., /api/): Shows documentation/info
+app.get(`${config.apiPrefix}`, (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: `Welcome to ${config.app.name} API v1`,
     endpoints: {
       health: "/health",
-      api: `${config.apiPrefix}/*`,
+      auth: `${config.apiPrefix}/auth`,
+      // Add other main categories here
     },
   });
 });
+
+// // API Root
+// app.get(`${config.apiPrefix}/`, (_req: Request, res: Response) => {
+//   res.status(200).json({
+//     success: true,
+//     message: `Welcome to ${config.app.name} API v1`,
+//     endpoints: {
+//       health: "/health",
+//       api: `${config.apiPrefix}/*`,
+//     },
+//   });
+// });
 
 // Feature Routes
 app.use(`${config.apiPrefix}/auth`, authRoutes);
@@ -205,6 +227,14 @@ process.on("SIGINT", () => {
 // START SERVER
 // ========================
 
-startServer();
+// Only run the traditional listen() if NOT on Vercel/Production
+if (process.env.NODE_ENV !== "production") {
+  startServer();
+} else {
+  
+  connectDatabase()
+    .then(() => logger.info("Database connected (Production Mode)"))
+    .catch((err) => logger.error("DB connection failed:", err));
+}
 
 export default app;
