@@ -10,6 +10,7 @@ import {
 import { loginApi } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
 import toast from "react-hot-toast";
+import sydLogo from "@/assets/syd-logo.png";
 
 const LoginPage: React.FC = () => {
 	const navigate = useNavigate();
@@ -115,7 +116,7 @@ const LoginPage: React.FC = () => {
 						marginBottom: "36px",
 					}}>
 					<motion.img
-						src="/src/assets/syd-logo.png"
+						src={sydLogo}
 						alt="Syd & Co"
 						animate={{ scale: [1, 1.05, 1] }}
 						transition={{
@@ -124,7 +125,8 @@ const LoginPage: React.FC = () => {
 							repeatDelay: 2,
 						}}
 						style={{
-							height: "80px",
+							height: "70px",
+							// width: "160px",
 							objectFit: "contain",
 							margin: "0 auto 16px",
 							display: "block",

@@ -6,7 +6,7 @@ import { useTheme } from '@context/useTheme'
 import { theme } from '@styles/theme'
 import { getProductsApi } from '@api/products'
 import ProductCard from '@components/ProductCard'
-import sydHero from '../../assets/syd-hero.png'
+import Banner from '../../assets/Banner.png'
 
 const HomePage: React.FC = () => {
   const { isDark } = useTheme()
@@ -274,7 +274,7 @@ const HomePage: React.FC = () => {
 							position: "relative",
 						}}>
 						<img
-							src={sydHero}
+							src={Banner}
 							alt="Syd & Co"
 							style={{
 								width: "100%",
