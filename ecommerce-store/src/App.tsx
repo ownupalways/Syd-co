@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 import { Navbar } from '@components/Navbar'
 import { Footer } from '@components/Footer'
 import HomePage from '@pages/Home/HomePage'
@@ -15,59 +16,60 @@ import ContactPage from '@pages/Contact/ContactPage'
 
 
 export default function App() {
-  return (
-		<div
-			style={{
-				minHeight: "100vh",
-				display: "flex",
-				flexDirection: "column",
-			}}>
-			<Navbar />
-			<main style={{ flex: 1 }}>
-				<Routes>
-					<Route
-						path="/"
-						element={<HomePage />}
-					/>
-					<Route
-						path="/shop"
-						element={<ShopPage />}
-					/>
-					<Route
-						path="/about"
-						element={<AboutPage />}
-					/>
-					<Route
-						path="/contact"
-						element={<ContactPage />}
-					/>
-					<Route
-						path="/product/:id"
-						element={<ProductDetailPage />}
-					/>
-					<Route
-						path="/cart"
-						element={<CartPage />}
-					/>
-					<Route
-						path="/login"
-						element={<LoginPage />}
-					/>
-					<Route
-						path="/register"
-						element={<RegisterPage />}
-					/>
-					<Route
-						path="/checkout"
-						element={<CheckoutPage />}
-					/>
-					<Route
-						path="/order-success/:id"
-						element={<OrderSuccessPage />}
-					/>
-				</Routes>
-			</main>
-			<Footer />
-		</div>
+	return (
+			<div
+				style={{
+					minHeight: "100vh",
+					display: "flex",
+					flexDirection: "column",
+				}}>
+				<ScrollToTop />
+				<Navbar />
+				<main style={{ flex: 1 }}>
+					<Routes>
+						<Route
+							path="/"
+							element={<HomePage />}
+						/>
+						<Route
+							path="/shop"
+							element={<ShopPage />}
+						/>
+						<Route
+							path="/about"
+							element={<AboutPage />}
+						/>
+						<Route
+							path="/contact"
+							element={<ContactPage />}
+						/>
+						<Route
+							path="/product/:id"
+							element={<ProductDetailPage />}
+						/>
+						<Route
+							path="/cart"
+							element={<CartPage />}
+						/>
+						<Route
+							path="/login"
+							element={<LoginPage />}
+						/>
+						<Route
+							path="/register"
+							element={<RegisterPage />}
+						/>
+						<Route
+							path="/checkout"
+							element={<CheckoutPage />}
+						/>
+						<Route
+							path="/order-success/:id"
+							element={<OrderSuccessPage />}
+						/>
+					</Routes>
+				</main>
+				<Footer />
+			</div>
 	);
 }
