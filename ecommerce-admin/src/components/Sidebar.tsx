@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
 import { useNotificationStore } from '../store/notificationStore'
+import  sydLogo  from '../../assets/syd-logo.png';
 
 const superAdminLinks = [
   { to: '/', icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
@@ -82,7 +83,7 @@ const Sidebar: React.FC<{ onNotifClick: () => void }> = ({ onNotifClick }) => {
 							gap: "10px",
 						}}>
 						<img
-							src="/src/assets/syd-logo.png"
+							src={sydLogo}
 							alt="Syd & Co"
 							style={{
 								width: "36px",
