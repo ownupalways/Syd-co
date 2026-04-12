@@ -240,7 +240,8 @@ const AboutPage: React.FC = () => {
 
 						{/* Action Row */}
 
-						<div
+            <div 
+              className='about-btns'
 							style={{
 								display: "flex",
 								gap: "12px",
@@ -278,22 +279,16 @@ const AboutPage: React.FC = () => {
 							</Link>
 
 							<Link to="/contact">
-								<button
+                <button
+                  className="feature-pill text-content"
 									style={{
 										padding: "12px 28px",
-
 										borderRadius: "50px",
-
 										border: `2px solid ${t.primaryDark}`,
-
 										background: "transparent",
-
 										color: t.primaryDark,
-
 										fontWeight: 700,
-
 										fontSize: "14px",
-
 										cursor: "pointer",
 									}}>
 									Get in Touch
@@ -690,6 +685,26 @@ const AboutPage: React.FC = () => {
           }
           .about-hero-grid > div:last-child {
             display: none !important;
+          }
+        }
+
+         @media (max-width: 480px) {
+          .hero-badge { top: 15px; width: 90%; justify-content: center; }
+          .hero-badge span { font-size: 10px; }
+          .feature-pill { font-size: 8px; padding: 2px 10px; }
+          .text-content {
+          padding: 8px !important;
+          backdrop-filter: blur(4px) !important; /* Lighter blur for performance on low-end phones */
+        }
+          .about-btns {
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-center: center !important;
+            gap: 12px !important;
+          }
+          .about-btns button {
+            width: 100% !important;
+            justify-content: center !important;
           }
         }
       `}</style>

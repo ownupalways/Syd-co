@@ -11,11 +11,12 @@ const HeroSection: React.FC = () => {
 
   return (
 		<section
+			className="hero-container"
 			style={{
 				position: "relative",
 				width: "100%",
-				// Height reduced by 40% (Approx 300px - 450px range)
-				height: "clamp(300px, 35vh, 420px)",
+				// Responsive height: slim on desktop, slightly taller on mobile to accommodate stacked text
+				height: "clamp(320px, 40vh, 420px)",
 				display: "flex",
 				alignItems: "center",
 				overflow: "hidden",
@@ -34,23 +35,25 @@ const HeroSection: React.FC = () => {
 						width: "100%",
 						height: "100%",
 						objectFit: "cover",
-						objectPosition: "left center", // Human subject anchored to left
+						objectPosition: "left center",
 					}}
 				/>
-				{/* Transparent Overlay: Darker on the right to make text pop */}
-				<div
-					style={{
-						position: "absolute",
-						inset: 0,
-						background: isDark
-							? "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.8) 100%)"
-							: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0.7) 100%)",
-					}}
-				/>
+				{/* Overlay: Adapts from side-gradient on desktop to subtle full-cover on mobile */}
+				<div className="hero-overlay" />
 			</div>
 
-			{/* 2. ABSOLUTELY TRANSPARENT CONTENT LAYER */}
+			{/* 2. ABSOLUTELY CENTERED BADGE (Parent Level) */}
+			<div className="hero-badge">
+				<Sparkles
+					size={14}
+					color={t.primaryDark}
+				/>
+				<span>New Arrivals Just Dropped ✨</span>
+			</div>
+
+			{/* 3. CONTENT LAYER */}
 			<div
+				className="content-wrapper"
 				style={{
 					position: "relative",
 					zIndex: 10,
@@ -59,69 +62,30 @@ const HeroSection: React.FC = () => {
 					padding: "0 5%",
 					width: "100%",
 					display: "flex",
-					justifyContent: "flex-end", // Aligned to the right
+					justifyContent: "flex-end",
 				}}>
 				<div
+					className="text-content"
 					style={{
-						maxWidth: "460px",
-						// No background or border - completely transparent
+						maxWidth: "480px",
 						background: "transparent",
-						textAlign: "right", // Aligning text to the right for a "neat" look
+						textAlign: "right",
 						display: "flex",
 						flexDirection: "column",
 						alignItems: "flex-end",
-						position: "relative",
 						width: "100%",
-						top: "0", // No vertical shift, content starts at the top of the section
 					}}>
-					{/* Minimal Badge - Now Centered at the Top */}
-					<div
-						style={{
-							position: "absolute",
-							top: "10px", // Distance from the top of the hero
-							left: "20%",
-							transform: "translateX(-50%)", // Centers it exactly
-							zIndex: 20, // Ensures it stays above the background image
-							display: "flex",
-							// alignItems: "center",
-							justifyContent: "center",
-							gap: "7px",
-							padding: "6px 18px",
-							borderRadius: "20px",
-							background: isDark
-								? "rgba(230,91,168,0.2)"
-								: "rgba(255, 255, 255, 0.8)", // Slight opacity for a clean look
-							backdropFilter: "blur(4px)", // Makes it look "glassy"
-							border: `1px solid ${t.primaryDark}40`,
-							whiteSpace: "nowrap", // Prevents text from wrapping
-						}}>
-						<Sparkles
-							size={14}
-							color={t.primaryDark}
-						/>
-						<span
-							style={{
-								fontSize: "12px",
-								color: t.primaryDark,
-								fontWeight: 800,
-								letterSpacing: "0.05em",
-								textTransform: "uppercase",
-							}}>
-							New Arrivals Just Dropped ✨
-						</span>
-					</div>
-
 					<h1
 						style={{
 							fontSize:
-								"clamp(1.6rem, 3.2vw, 2.4rem)",
+								"clamp(1.75rem, 4vw, 2.6rem)",
 							fontWeight: 900,
 							lineHeight: 1.1,
 							color: t.text,
-							marginBottom: "10px",
+							marginBottom: "12px",
 							letterSpacing: "-0.03em",
 						}}>
-						Look Good <br />
+						Look Good, <br />
 						<span
 							style={{ color: t.primaryDark }}>
 							Feel Amazing
@@ -130,29 +94,35 @@ const HeroSection: React.FC = () => {
 
 					<p
 						style={{
-							fontSize: "clamp(13px, 1vw, 15px)",
-							color: t.textSecondary,
-							lineHeight: 1.4,
-							marginBottom: "20px",
-							fontWeight: 500,
+							fontSize:
+								"clamp(14px, 1.2vw, 16px)",
+							color: isDark
+								? t.textSecondary
+								: t.text,
+							lineHeight: 1.5,
+							marginBottom: "24px",
+							fontWeight: 600,
+							maxWidth: "400px",
+							textShadow: isDark
+								? "none"
+								: "0px 1px 2px rgba(255,255,255,0.8)",
 						}}>
 						High-quality fashion essentials
-						delivered <br />
-						straight to your door with love.
+						delivered straight to your door with
+						love.
 					</p>
 
-					{/* Action Row */}
 					<div
 						style={{
 							display: "flex",
 							gap: "10px",
-							marginBottom: "24px",
+							marginBottom: "30px",
 						}}>
 						<Link to="/shop">
 							<button
 								style={{
-									padding: "10px 24px",
-									borderRadius: "8px",
+									padding: "12px 28px",
+									borderRadius: "10px",
 									border: "none",
 									background: t.primaryDark,
 									color: "#fff",
@@ -171,14 +141,8 @@ const HeroSection: React.FC = () => {
 						</Link>
 					</div>
 
-					{/* Feature Row - Compact & Transparent */}
-					<div
-						style={{
-							display: "flex",
-							gap: "15px",
-							paddingTop: "16px",
-							borderTop: `1px solid ${t.border}40`,
-						}}>
+					{/* Feature Row - Now wraps nicely on small screens */}
+					<div className="feature-row">
 						{[
 							{
 								icon: <Truck size={14} />,
@@ -193,46 +157,109 @@ const HeroSection: React.FC = () => {
 								label: "4.9 Rated",
 							},
 						].map((feature, i) => (
-              <div
- 									key={i}
- 									style={{
- 										display: "inline-flex",
- 										alignItems: "center",
- 										gap: "5px",
- 										padding: "5px 12px",
- 										borderRadius: "20px",
- 										fontSize: "12px",
- 										background: isDark
- 											? "rgba(255,255,255,0.06)"
- 											: "rgba(255,255,255,0.7)",
- 										border: `1px solid ${t.border}`,
- 										color: t.textSecondary,
- 										fontWeight: 600,
- 									}}>
- 									<span
- 										style={{ fontSize: "11px" }}>
- 										{feature.icon}
- 									</span>
- 									{feature.label}
- 								</div>
+							<div
+								key={i}
+								className="feature-pill"
+								style={{
+									background: isDark
+										? "rgba(255,255,255,0.06)"
+										: "rgba(255,255,255,0.7)",
+									border: `1px solid ${t.border}`,
+									color: t.textSecondary,
+								}}>
+								{feature.icon}
+								{feature.label}
+							</div>
 						))}
 					</div>
 				</div>
 			</div>
 
 			<style>{`
+        /* Dynamic Overlay */
+        .hero-overlay {
+          position: absolute;
+          inset: 0;
+          background: ${
+						isDark
+							? "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.8) 100%)"
+							: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0.7) 100%)"
+					};
+        }
+
+        /* Centered Badge Logic */
+        .hero-badge {
+          position: absolute;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 20;
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          padding: 6px 18px;
+          border-radius: 20px;
+          background: ${isDark ? "rgba(230,91,168,0.2)" : "rgba(255, 255, 255, 0.85)"};
+          backdrop-filter: blur(4px);
+          border: 1px solid ${t.primaryDark}40;
+          white-space: nowrap;
+        }
+        .hero-badge span {
+          font-size: 11px;
+          color: ${t.primaryDark};
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        /* Features Styling */
+        .feature-row {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+          padding-top: 16px;
+          border-top: 1px solid ${t.border}40;
+        }
+        .feature-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 12px;
+          border-radius: 20px;
+          font-size: 11px;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        /* Tablet & Mobile Adjustments */
         @media (max-width: 768px) {
-          section { height: 350px !important; }
-          .banner-content-wrapper { justify-content: center !important; }
-          div[style*="alignItems: flex-end"] { 
-            alignItems: center !important; 
-            text-align: center !important;
+          .hero-container { height: 450px !important; }
+          .hero-overlay {
+             background: ${
+								isDark
+									? "rgba(0,0,0,0.5)"
+									: "rgba(255,255,255,0.4)"
+							} !important;
           }
+          .content-wrapper { justify-content: center !important; }
+          .text-content { 
+            align-items: center !important; 
+            text-align: center !important;
+            max-width: 100% !important;
+          }
+          .feature-row { justify-content: center !important; }
           h1 br { display: none; }
+        }
+
+        @media (max-width: 480px) {
+          .hero-badge { top: 15px; width: 90%; justify-content: center; }
+          .hero-badge span { font-size: 10px; }
+          .feature-pill { font-size: 10px; padding: 4px 10px; }
         }
       `}</style>
 		</section>
 	);
 }
 
-export default HeroSection
+export default HeroSection;
