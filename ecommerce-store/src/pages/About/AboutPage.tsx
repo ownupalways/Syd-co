@@ -692,4 +692,9 @@ const AboutPage: React.FC = () => {
             display: none !important;
           }
         }
- 
+      `}</style>
+		</div>
+	);
+}
+
+export default AboutPage
