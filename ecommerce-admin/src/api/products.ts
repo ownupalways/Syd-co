@@ -2,25 +2,31 @@ import api from "./axios";
 import type {
 	ApiResponse,
 	Product,
+	ProductPayload, // 1. Import the new payload
 } from "../types";
+
+// 2. Define the Pagination structure to keep the GET call clean
+export interface ProductsResponse {
+	success: boolean;
+	message: string;
+	data: Product[];
+	pagination: {
+		total: number;
+		pages: number;
+		page: number;
+		limit: number;
+	};
+}
 
 export const getProductsApi = (
 	params?: Record<string, unknown>,
 ) =>
-	api.get<{
-		success: boolean;
-		message: string;
-		data: Product[];
-		pagination: {
-			total: number;
-			pages: number;
-			page: number;
-			limit: number;
-		};
-	}>("/products", { params });
-	
+	api.get<ProductsResponse>("/products", {
+		params,
+	});
+
 export const createProductApi = (
-	data: Record<string, unknown>,
+	data: ProductPayload, // 3. Use specific payload
 ) =>
 	api.post<ApiResponse<Product>>(
 		"/products",
@@ -29,7 +35,7 @@ export const createProductApi = (
 
 export const updateProductApi = (
 	id: string,
-	data: Partial<Product>,
+	data: ProductPayload, // 4. Use specific payload
 ) =>
 	api.put<ApiResponse<Product>>(
 		`/products/${id}`,

@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
-import { FileText, Download, Filter } from 'lucide-react'
+import { FileText, Download, Filter, Globe, Shield } from 'lucide-react'
 import { getAuditLogsApi } from '../../api/audit'
 import type { AuditLog } from '../../types'
 
 const statusColors: Record<string, string> = {
-  success: 'var(--success)',
-  pending: 'var(--warning)',
-  rejected: 'var(--error)',
-  failed: 'var(--error)',
+  success: 'text-emerald-500 bg-emerald-500/10',
+  pending: 'text-amber-500 bg-amber-500/10',
+  rejected: 'text-rose-500 bg-rose-500/10',
+  failed: 'text-rose-600 bg-rose-600/10',
 }
 
 const AuditLogsPage: React.FC = () => {
@@ -46,85 +46,96 @@ const AuditLogsPage: React.FC = () => {
   }
 
   return (
-    <div>
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '28px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-          <div>
-            <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text)', marginBottom: '6px' }}>
-              Audit Logs
-            </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-              Complete record of all admin actions
-            </p>
-          </div>
-          <button onClick={exportCSV} style={{
-            display: 'flex', alignItems: 'center', gap: '8px',
-            padding: '10px 20px', borderRadius: '10px',
-            border: '1px solid var(--border)', background: 'transparent',
-            color: 'var(--text-secondary)', cursor: 'pointer',
-            fontSize: '13px', fontWeight: 600,
-          }}>
-            <Download size={16} /> Export CSV
-          </button>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
+      >
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Audit Logs
+          </h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            A comprehensive trail of all administrative system actions.
+          </p>
         </div>
+        <button 
+          onClick={exportCSV} 
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all shadow-sm"
+        >
+          <Download size={18} /> Export CSV
+        </button>
       </motion.div>
 
-      {/* Filters */}
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap', alignItems: 'center' }}>
-        <Filter size={16} color="var(--text-secondary)" />
-        {['', 'Product', 'Order', 'User', 'AdminUser'].map((r) => (
-          <button key={r} onClick={() => { setResource(r); setPage(1) }} style={{
-            padding: '7px 16px', borderRadius: '20px', fontSize: '12px', fontWeight: 600,
-            border: '1px solid var(--border)', cursor: 'pointer',
-            background: resource === r ? 'var(--gradient)' : 'transparent',
-            color: resource === r ? '#fff' : 'var(--text-secondary)',
-          }}>
-            {r || 'All'}
-          </button>
-        ))}
-        <div style={{ width: '1px', height: '24px', background: 'var(--border)' }} />
-        {['', 'success', 'pending', 'rejected', 'failed'].map((s) => (
-          <button key={s} onClick={() => { setStatus(s); setPage(1) }} style={{
-            padding: '7px 16px', borderRadius: '20px', fontSize: '12px', fontWeight: 600,
-            border: `1px solid ${s ? statusColors[s] + '40' : 'var(--border)'}`,
-            cursor: 'pointer',
-            background: status === s && s ? `${statusColors[s]}20` : status === s ? 'var(--bg-hover)' : 'transparent',
-            color: s ? statusColors[s] : 'var(--text-secondary)',
-          }}>
-            {s || 'All Status'}
-          </button>
-        ))}
+      {/* Filter Toolbar */}
+      <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-8">
+        <div className="flex items-center gap-2 text-slate-400">
+          <Filter size={18} />
+          <span className="text-xs font-bold uppercase tracking-widest hidden sm:inline">Filters</span>
+        </div>
+        
+        {/* Resource Filters */}
+        <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
+          {['', 'Product', 'Order', 'User', 'AdminUser'].map((r) => (
+            <button 
+              key={r} 
+              onClick={() => { setResource(r); setPage(1) }} 
+              className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${
+                resource === r 
+                ? 'bg-slate-900 border-slate-900 text-white dark:bg-white dark:text-slate-900' 
+                : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400'
+              }`}
+            >
+              {r || 'All Resources'}
+            </button>
+          ))}
+        </div>
+
+        <div className="hidden lg:block w-px h-6 bg-slate-200 dark:bg-slate-700 mx-2" />
+
+        {/* Status Filters */}
+        <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
+          {['', 'success', 'pending', 'rejected', 'failed'].map((s) => (
+            <button 
+              key={s} 
+              onClick={() => { setStatus(s); setPage(1) }} 
+              className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border transition-all ${
+                status === s 
+                ? 'bg-indigo-600 border-indigo-600 text-white' 
+                : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400'
+              }`}
+            >
+              {s ? s.charAt(0).toUpperCase() + s.slice(1) : 'All Statuses'}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Table */}
-      <div style={{
-        background: 'var(--bg-card)', border: '1px solid var(--border)',
-        borderRadius: '16px', overflow: 'hidden',
-      }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '700px' }}>
+      {/* Table Container */}
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-200">
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-hover)' }}>
-                {['Admin', 'Action', 'Resource', 'Status', 'IP Address', 'Date'].map((h) => (
-                  <th key={h} style={{
-                    padding: '12px 16px', textAlign: 'left',
-                    fontSize: '11px', fontWeight: 700,
-                    color: 'var(--text-secondary)', letterSpacing: '0.05em',
-                    textTransform: 'uppercase',
-                  }}>
+              <tr className="bg-slate-50 dark:bg-slate-900/50 border-bottom border-slate-200 dark:border-slate-700">
+                {['Admin / Role', 'Action', 'Resource', 'Status', 'IP Address', 'Timestamp'].map((h) => (
+                  <th key={h} className="px-6 py-4 text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
               {isLoading ? (
-                <tr><td colSpan={6} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading...</td></tr>
+                <tr><td colSpan={6} className="px-6 py-12 text-center text-slate-500 italic">Synchronizing logs...</td></tr>
               ) : logs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ padding: '40px', textAlign: 'center' }}>
-                    <FileText size={40} style={{ opacity: 0.2, marginBottom: '12px', color: 'var(--pink)' }} />
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>No logs found</p>
+                  <td colSpan={6} className="px-6 py-20 text-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <FileText size={48} className="text-slate-200 dark:text-slate-700" />
+                      <p className="text-slate-500 font-medium">No activity records match your current filters.</p>
+                    </div>
                   </td>
                 </tr>
               ) : logs.map((log, i) => (
@@ -133,46 +144,48 @@ const AuditLogsPage: React.FC = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: i * 0.02 }}
-                  style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
                 >
-                  <td style={{ padding: '12px 16px' }}>
-                    <div>
-                      <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>{log.adminName}</p>
-                      <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{log.adminRole}</p>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center">
+                        <Shield size={14} className="text-indigo-600 dark:text-indigo-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{log.adminName}</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{log.adminRole}</p>
+                      </div>
                     </div>
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '13px', color: 'var(--pink-light)', fontWeight: 600 }}>
-                    {log.action}
+                  <td className="px-6 py-4">
+                    <span className="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">
+                      {log.action}
+                    </span>
                   </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <span style={{
-                      padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600,
-                      background: 'rgba(255,45,120,0.1)', color: 'var(--pink)',
-                    }}>
+                  <td className="px-6 py-4">
+                    <span className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px] font-bold border border-slate-200 dark:border-slate-600">
                       {log.resource}
                     </span>
                   </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <span style={{
-                      display: 'flex', alignItems: 'center', gap: '6px',
-                      fontSize: '12px', fontWeight: 600,
-                      color: statusColors[log.status] ?? 'var(--text-secondary)',
-                    }}>
-                      <span style={{
-                        width: '6px', height: '6px', borderRadius: '50%',
-                        background: statusColors[log.status] ?? 'var(--text-secondary)',
-                        flexShrink: 0,
-                      }} />
+                  <td className="px-6 py-4">
+                    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${statusColors[log.status] || 'text-slate-400 bg-slate-100'}`}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-current" />
                       {log.status}
-                    </span>
+                    </div>
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
-                    {log.ipAddress}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono">
+                      <Globe size={12} className="opacity-50" />
+                      {log.ipAddress}
+                    </div>
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-secondary)' }}>
-                    {new Date(log.createdAt).toLocaleString()}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      {new Date(log.createdAt).toLocaleDateString()}
+                    </p>
+                    <p className="text-[10px] text-slate-400 font-medium">
+                      {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
                   </td>
                 </motion.tr>
               ))}
@@ -181,17 +194,19 @@ const AuditLogsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination Controls */}
       {pagination && pagination.pages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '24px' }}>
+        <div className="mt-8 flex justify-center items-center gap-2">
           {Array.from({ length: pagination.pages }, (_, i) => i + 1).map((p) => (
-            <button key={p} onClick={() => setPage(p)} style={{
-              padding: '8px 14px', borderRadius: '8px',
-              border: '1px solid var(--border)',
-              background: page === p ? 'var(--gradient)' : 'transparent',
-              color: page === p ? '#fff' : 'var(--text)',
-              cursor: 'pointer', fontWeight: 600, fontSize: '13px',
-            }}>
+            <button 
+              key={p} 
+              onClick={() => setPage(p)} 
+              className={`min-w-10 h-10 rounded-xl text-sm font-bold transition-all border ${
+                page === p 
+                ? 'bg-slate-900 border-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md' 
+                : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400'
+              }`}
+            >
               {p}
             </button>
           ))}

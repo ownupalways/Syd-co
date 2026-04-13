@@ -22,9 +22,7 @@ const DashboardPage: React.FC = () => {
     enabled: isSuperAdmin,
   })
 
- const totalProducts =
-		productsData?.data?.pagination?.total ?? 0;
-
+  const totalProducts = productsData?.data?.pagination?.total ?? 0
   const pendingCount = pendingData?.data?.data?.pagination?.total ?? 0
 
   const stats = [
@@ -65,23 +63,28 @@ const DashboardPage: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{ marginBottom: '32px' }}
+        style={{ marginBottom: 'clamp(20px, 3vw, 32px)' }}
       >
-        <h1 style={{ fontSize: '28px', fontWeight: 800, color: 'var(--text)', marginBottom: '6px' }}>
+        <h1 style={{
+          fontSize: 'clamp(20px, 3vw, 28px)',
+          fontWeight: 800, color: 'var(--text)', marginBottom: '6px',
+        }}>
           Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'},{' '}
           <span className="gradient-text">{admin?.name.split(' ')[0]}</span> 👋
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-          {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+        <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
+          {new Date().toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+          })}
         </p>
       </motion.div>
 
-      {/* Stats */}
+      {/* Stats Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-        gap: '20px',
-        marginBottom: '32px',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+        gap: 'clamp(12px, 2vw, 20px)',
+        marginBottom: 'clamp(20px, 3vw, 32px)',
       }}>
         {stats.map((s) => <StatCard key={s.label} {...s} />)}
       </div>
@@ -92,18 +95,21 @@ const DashboardPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
         className="glass-card"
-        style={{ padding: '24px', marginBottom: '24px' }}
+        style={{ padding: 'clamp(16px, 2vw, 24px)', marginBottom: '20px' }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{
+          display: 'flex', alignItems: 'flex-start',
+          gap: '12px', flexWrap: 'wrap',
+        }}>
           <div style={{
-            padding: '8px 16px', borderRadius: '30px',
+            padding: '6px 14px', borderRadius: '30px', flexShrink: 0,
             background: isSuperAdmin ? 'var(--gradient)' : 'rgba(155,48,255,0.2)',
             color: isSuperAdmin ? '#fff' : 'var(--purple-mid)',
-            fontSize: '13px', fontWeight: 700,
+            fontSize: '12px', fontWeight: 700,
           }}>
             {admin?.role}
           </div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.5 }}>
             {isSuperAdmin
               ? 'You have full access to all features and can approve sub-admin actions.'
               : 'Your actions are reviewed by a super-admin before taking effect.'}
@@ -117,9 +123,9 @@ const DashboardPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
         className="glass-card"
-        style={{ padding: '32px', textAlign: 'center' }}
+        style={{ padding: 'clamp(24px, 3vw, 40px)', textAlign: 'center' }}
       >
-        <TrendingUp size={40} color="var(--pink)" style={{ opacity: 0.4, marginBottom: '12px' }} />
+        <TrendingUp size={36} color="var(--pink)" style={{ opacity: 0.4, marginBottom: '12px' }} />
         <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
           Revenue analytics coming after orders are implemented
         </p>

@@ -32,9 +32,23 @@ export interface Product {
 	reviews: number;
 	seller: string;
 	isActive: boolean;
+	isBestSeller: boolean;
 	createdAt: string;
 	createdByName?: string;
 	updatedByName?: string;
+}
+
+export interface ProductPayload {
+	name: string;
+	description: string;
+	price: number;
+	originalPrice?: number;
+	category: string;
+	stock: number;
+	seller: string;
+	image: string;
+	images: string[];
+	isBestSeller: boolean;
 }
 
 export interface Order {

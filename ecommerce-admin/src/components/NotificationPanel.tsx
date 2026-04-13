@@ -1,120 +1,112 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Bell, UserCheck, CheckCircle, Clock } from 'lucide-react'
+import { X, Bell, UserCheck, CheckCircle, Clock, Inbox } from 'lucide-react'
 import { useNotificationStore } from '../store/notificationStore'
 
-const NotificationPanel: React.FC<{ open: boolean; onClose: () => void }> = ({ open, onClose }) => {
+interface NotificationPanelProps {
+  open: boolean
+  onClose: () => void
+}
+
+const NotificationPanel: React.FC<NotificationPanelProps> = ({ open, onClose }) => {
   const { notifications, markAllRead, markRead } = useNotificationStore()
 
   const icons = {
-    'new-registration': <UserCheck size={16} color="var(--info)" />,
-    'action-reviewed': <CheckCircle size={16} color="var(--success)" />,
-    'pending-action': <Clock size={16} color="var(--warning)" />,
+    'new-registration': <UserCheck size={16} className="text-blue-500" />,
+    'action-reviewed': <CheckCircle size={16} className="text-emerald-500" />,
+    'pending-action': <Clock size={16} className="text-amber-500" />,
   }
 
   return (
     <AnimatePresence>
       {open && (
         <>
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            style={{
-              position: 'fixed', inset: 0,
-              background: 'rgba(0,0,0,0.4)',
-              zIndex: 99,
-            }}
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-99"
           />
+
+          {/* Panel */}
           <motion.div
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            style={{
-              position: 'fixed', right: 0, top: 0, bottom: 0,
-              width: '360px',
-              background: 'var(--bg-card)',
-              borderLeft: '1px solid var(--border)',
-              zIndex: 100,
-              display: 'flex', flexDirection: 'column',
-            }}
+            className="fixed right-0 top-0 bottom-0 w-full max-w-95 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 z-100 flex flex-col shadow-2xl"
           >
             {/* Header */}
-            <div style={{
-              padding: '20px',
-              borderBottom: '1px solid var(--border)',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Bell size={20} color="var(--pink)" />
-                <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>
-                  Notifications
-                </span>
+            <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-white/50 dark:bg-slate-900/50 backdrop-blur-md sticky top-0 z-10">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-rose-50 dark:bg-rose-500/10 rounded-lg">
+                  <Bell size={18} className="text-rose-500" />
+                </div>
+                <h2 className="font-bold text-slate-900 dark:text-white">Notifications</h2>
               </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button onClick={markAllRead} style={{
-                  fontSize: '12px', color: 'var(--pink)',
-                  background: 'none', border: 'none', cursor: 'pointer',
-                }}>
-                  Mark all read
-                </button>
-                <button onClick={onClose} style={{
-                  background: 'none', border: 'none',
-                  cursor: 'pointer', color: 'var(--text-secondary)',
-                }}>
-                  <X size={18} />
+              
+              <div className="flex items-center gap-2">
+                {notifications.length > 0 && (
+                  <button 
+                    onClick={markAllRead}
+                    className="text-xs font-semibold text-rose-500 hover:text-rose-600 px-2 py-1 transition-colors"
+                  >
+                    Mark all read
+                  </button>
+                )}
+                <button 
+                  onClick={onClose}
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 transition-colors"
+                >
+                  <X size={20} />
                 </button>
               </div>
             </div>
 
-            {/* List */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
+            {/* Content Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
               {notifications.length === 0 ? (
-                <div style={{
-                  textAlign: 'center', padding: '60px 20px',
-                  color: 'var(--text-secondary)',
-                }}>
-                  <Bell size={40} style={{ opacity: 0.2, marginBottom: '12px' }} />
-                  <p style={{ fontSize: '14px' }}>No notifications yet</p>
+                <div className="h-full flex flex-col items-center justify-center text-center p-8 opacity-40">
+                  <Inbox size={48} className="text-slate-300 mb-4" />
+                  <p className="text-sm font-medium text-slate-500">Your inbox is empty</p>
                 </div>
               ) : (
                 notifications.map((n) => (
                   <motion.div
                     key={n.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     onClick={() => markRead(n.id)}
-                    style={{
-                      padding: '14px',
-                      borderRadius: '12px',
-                      marginBottom: '8px',
-                      background: n.read ? 'transparent' : 'var(--glass)',
-                      border: `1px solid ${n.read ? 'var(--border)' : 'var(--glass-border)'}`,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                    }}
+                    className={`relative p-4 rounded-xl border transition-all cursor-pointer group ${
+                      n.read 
+                        ? 'bg-transparent border-slate-100 dark:border-slate-800 opacity-60' 
+                        : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md'
+                    }`}
                   >
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                      <span style={{ marginTop: '2px', flexShrink: 0 }}>{icons[n.type]}</span>
-                      <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
-                          {n.title}
-                        </p>
-                        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                    <div className="flex gap-4">
+                      <div className="shrink-0 mt-1 italic">
+                        {icons[n.type as keyof typeof icons] || <Bell size={16} className="text-slate-400" />}
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start gap-2">
+                          <p className="text-[13px] font-bold text-slate-900 dark:text-white leading-tight mb-1 truncate">
+                            {n.title}
+                          </p>
+                          {!n.read && (
+                            <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0 mt-1 animate-pulse" />
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
                           {n.message}
                         </p>
-                        <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px' }}>
-                          {new Date(n.createdAt).toLocaleTimeString()}
-                        </p>
+                        <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-3 block uppercase tracking-wider">
+                          {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
                       </div>
-                      {!n.read && (
-                        <div style={{
-                          width: '8px', height: '8px', borderRadius: '50%',
-                          background: 'var(--pink)', flexShrink: 0, marginTop: '4px',
-                        }} />
-                      )}
                     </div>
                   </motion.div>
                 ))
