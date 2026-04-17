@@ -1,99 +1,60 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useTheme } from '@context/useTheme'
-import { theme } from '@styles/theme'
-import { ArrowRight, Heart, Star, ShoppingBag, Users, Award, Sparkles } from 'lucide-react'
-import Banner from '../../assets/Banner.png'
-import sydLogo from '../../assets/syd-logo.png'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useTheme } from '@context/useTheme';
+import { theme } from '@styles/theme';
+import { ArrowRight, Heart, Star, ShoppingBag, Users, Award, Sparkles } from 'lucide-react';
+import Banner from '../../assets/Banner.png';
 
 const AboutPage: React.FC = () => {
-  const { isDark } = useTheme()
-  const t = isDark ? theme.dark : theme.light
+  const { isDark } = useTheme();
+  const t = isDark ? theme.dark : theme.light;
 
   const stats = [
     { icon: <Users size={22} />, value: '10K+', label: 'Happy Customers' },
     { icon: <ShoppingBag size={22} />, value: '500+', label: 'Products Curated' },
     { icon: <Star size={22} />, value: '4.9★', label: 'Average Rating' },
     { icon: <Award size={22} />, value: '2+', label: 'Years of Excellence' },
-  ]
+  ];
 
   const values = [
-    {
-      icon: '💄',
-      title: 'Curated with Love',
-      desc: 'Every product in our store is hand-picked personally. If it does not meet our standards, it does not make the cut.',
-    },
-    {
-      icon: '✨',
-      title: 'Authenticity First',
-      desc: 'We only carry products we genuinely believe in. No fakes, no compromises — just real quality for real queens.',
-    },
-    {
-      icon: '🤝',
-      title: 'Community Driven',
-      desc: 'Syd & Co is built by the community, for the community. Your feedback shapes everything we do.',
-    },
-    {
-      icon: '🚀',
-      title: 'Always Evolving',
-      desc: 'We stay ahead of trends so you never have to. New drops, new looks, new reasons to feel amazing.',
-    },
-  ]
+    { icon: '💄', title: 'Curated with Love', desc: 'Every product in our store is hand-picked personally. If it does not meet our standards, it does not make the cut.' },
+    { icon: '✨', title: 'Authenticity First', desc: 'We only carry products we genuinely believe in. No fakes, no compromises — just real quality for real queens.' },
+    { icon: '🤝', title: 'Community Driven', desc: 'Syd & Co is built by the community, for the community. Your feedback shapes everything we do.' },
+    { icon: '🚀', title: 'Always Evolving', desc: 'We stay ahead of trends so you never have to. New drops, new looks, new reasons to feel amazing.' },
+  ];
 
   return (
 		<div style={{ background: t.background }}>
+			{/* Hero Section */}
 			<section
 				style={{
 					position: "relative",
-
 					width: "100%",
-
-					// Consistent ribbon height: 40% reduction from standard
-
-					height: "clamp(320px, 38vh, 450px)",
-
+					height: "clamp(320px, 40vh, 500px)",
 					display: "flex",
-
 					alignItems: "center",
-
 					overflow: "hidden",
-
 					background: t.backgroundSecondary,
 				}}>
-				{/* 1. TOP CENTERED BADGE (Parent Level) */}
-
+				{/* Top Badge */}
 				<div
 					style={{
 						position: "absolute",
-
 						top: "24px",
-
 						left: "50%",
-
 						transform: "translateX(-50%)",
-
 						zIndex: 30,
-
 						display: "flex",
-
 						alignItems: "center",
-
 						gap: "8px",
-
 						padding: "6px 18px",
-
 						borderRadius: "100px",
-
 						background: isDark
 							? "rgba(230,91,168,0.2)"
 							: "rgba(255, 255, 255, 0.9)",
-
 						backdropFilter: "blur(8px)",
-
 						border: `1px solid ${t.primaryDark}40`,
-
 						whiteSpace: "nowrap",
-
 						boxShadow:
 							"0 4px 12px rgba(0,0,0,0.05)",
 					}}>
@@ -101,108 +62,158 @@ const AboutPage: React.FC = () => {
 						size={14}
 						color={t.primaryDark}
 					/>
-
 					<span
 						style={{
 							fontSize: "12px",
-
 							color: t.primaryDark,
-
 							fontWeight: 800,
-
 							letterSpacing: "0.06em",
-
 							textTransform: "uppercase",
 						}}>
 						Our Story
 					</span>
 				</div>
 
-				{/* 2. BACKGROUND IMAGE LAYER */}
-
+				{/* Background Image with Modern Effects */}
 				<div
 					style={{
 						position: "absolute",
 						inset: 0,
 						zIndex: 0,
+						overflow: "hidden", // Ensures animations don't bleed outside
 					}}>
-					<img
-						src={Banner}
-						alt="Syd & Co Story"
-						style={{
-							width: "100%",
-
-							height: "100%",
-
-							objectFit: "cover",
-
-							objectPosition: "left center", // Keeps the primary focus on the left
-						}}
-					/>
-
-					{/* Gradient Overlay for Text Legibility */}
-
+					{/* Background Image with Floating Effect */}
 					<div
 						style={{
 							position: "absolute",
-
 							inset: 0,
+							zIndex: 0,
+							overflow: "hidden",
+						}}>
+						{/* Floating Image Container */}
+						<div
+							style={{
+								position: "absolute",
+								inset: 0,
+							}}>
+							<img
+								src={Banner}
+								alt="Syd & Co Story"
+								style={{
+									width: "100%",
+									height: "100%",
+									objectFit: "cover",
+									objectPosition: "left center",
+								}}
+							/>
+						</div>
 
+						{/* Gradient Overlay */}
+						<div
+							style={{
+								position: "absolute",
+								inset: 0,
+								background: isDark
+									? "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.4) 35%, rgba(0,0,0,0.9) 100%)"
+									: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0.85) 100%)",
+							}}
+						/>
+
+						{/* CSS for Floating Animation */}
+						<style>{`
+							@keyframes float {
+								0%,
+								100% {
+									transform: translateY(0);
+								}
+								50% {
+									transform: translateY(-15px);
+								}
+							}
+							@media (max-width: 768px) {
+								/* Slower animation on mobile for performance */
+								div[style*="animation"] {
+									animation: float 8s ease-in-out
+										infinite;
+								}
+							}
+						`}</style>
+					</div>
+
+					{/* Gradient Overlay (Static) */}
+					<div
+						style={{
+							position: "absolute",
+							inset: 0,
 							background: isDark
 								? "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.4) 35%, rgba(0,0,0,0.9) 100%)"
 								: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 30%, rgba(255,255,255,0.85) 100%)",
+							pointerEvents: "none", // Ensures clicks pass through
 						}}
 					/>
+
+					{/* CSS Animations */}
+					<style>{`
+						@keyframes float {
+							0%,
+							100% {
+								transform: translateY(0);
+							}
+							50% {
+								transform: translateY(-15px);
+							}
+						}
+						@keyframes zoom {
+							0%,
+							100% {
+								transform: scale(1);
+							}
+							50% {
+								transform: scale(1.02);
+							}
+						}
+						@media (max-width: 768px) {
+							/* Reduce animation intensity on mobile for performance */
+							div[style*="animation"] {
+								animation:
+									float 8s ease-in-out infinite,
+									zoom 16s ease-in-out infinite;
+							}
+						}
+					`}</style>
 				</div>
-
-				{/* 3. ABSOLUTELY TRANSPARENT CONTENT (RIGHT-ALIGNED) */}
-
+				{/* Content */}
 				<div
 					style={{
 						position: "relative",
-
 						zIndex: 10,
-
 						maxWidth: "1200px",
-
 						margin: "0 auto",
-
 						padding: "0 5%",
-
 						width: "100%",
-
 						display: "flex",
-
 						justifyContent: "flex-end",
 					}}>
 					<div
 						style={{
 							maxWidth: "500px",
-
 							textAlign: "right",
-
 							display: "flex",
-
 							flexDirection: "column",
-
 							alignItems: "flex-end",
 						}}>
 						<h1
 							style={{
 								fontSize:
 									"clamp(1.8rem, 3.5vw, 2.8rem)",
-
 								fontWeight: 900,
-
 								lineHeight: 1.1,
-
 								color: t.text,
-
 								marginBottom: "14px",
-
 								letterSpacing: "-0.03em",
 							}}>
-							More Than a Store — <br />
+							More Than a Store —
+							<br />
 							<span
 								style={{
 									background: `linear-gradient(135deg, ${t.primaryDark}, ${t.primary})`,
@@ -210,77 +221,57 @@ const AboutPage: React.FC = () => {
 									backgroundClip: "text",
 									WebkitTextFillColor:
 										"transparent",
-									color: "transparent", // THIS IS THE MISSING KEY
-									display: "inline-block", // Ensures the gradient box is correctly sized
+									color: "transparent",
+									display: "inline-block",
 								}}>
-								It's a Vibe
+								It&apos;s a Vibe
 							</span>
 						</h1>
-
 						<p
 							style={{
 								fontSize:
 									"clamp(13px, 1.1vw, 16px)",
-
 								color: t.textSecondary,
-
 								lineHeight: 1.6,
-
 								marginBottom: "28px",
-
 								fontWeight: 500,
 							}}>
 							Syd & Co was born from a simple
 							idea: every woman deserves to feel
-							celebrated. We've grown into a
+							celebrated. We&apos;ve grown into a
 							community of queens who refuse to
 							settle for anything less than
 							amazing.
 						</p>
-
-						{/* Action Row */}
-
-            <div 
-              className='about-btns'
+						<div
 							style={{
 								display: "flex",
 								gap: "12px",
+								flexWrap: "wrap",
+								justifyContent: "flex-end",
 							}}>
 							<Link to="/shop">
 								<button
 									style={{
 										padding: "12px 28px",
-
 										borderRadius: "50px",
-
 										border: "none",
-
 										background: `linear-gradient(135deg, ${t.primaryDark}, ${t.primary})`,
-
 										color: "#fff",
-
 										fontWeight: 700,
-
 										fontSize: "14px",
-
 										cursor: "pointer",
-
 										display: "flex",
-
 										alignItems: "center",
-
 										gap: "8px",
-
 										boxShadow: `0 8px 20px ${t.shadow}`,
 									}}>
 									Shop Collection{" "}
 									<ArrowRight size={16} />
 								</button>
 							</Link>
-
 							<Link to="/contact">
-                <button
-                  className="feature-pill text-content"
+								<button
 									style={{
 										padding: "12px 28px",
 										borderRadius: "50px",
@@ -297,33 +288,9 @@ const AboutPage: React.FC = () => {
 						</div>
 					</div>
 				</div>
-
-				{/* Mobile Overrides */}
-
-				<style>{`
-
-        @media (max-width: 768px) {
-
-          section { height: 450px !important; }
-
-          div[style*="justifyContent: flex-end"] { justify-content: center !important; }
-
-          div[style*="alignItems: flex-end"] { 
-
-            alignItems: center !important; 
-
-            text-align: center !important;
-
-          }
-
-          h1 br { display: none; }
-
-        }
-
-      `}</style>
 			</section>
 
-			{/* Stats */}
+			{/* Stats Section */}
 			<section
 				style={{
 					padding: "60px 24px",
@@ -396,8 +363,8 @@ const AboutPage: React.FC = () => {
 				</div>
 			</section>
 
-			{/* Brand Story */}
-			<section style={{ padding: "80px 24px" }}>
+			{/* Brand Story Section */}
+			<section style={{ padding: "30px 24px" }}>
 				<div
 					style={{
 						maxWidth: "800px",
@@ -405,12 +372,16 @@ const AboutPage: React.FC = () => {
 						textAlign: "center",
 					}}>
 					<img
-						src={sydLogo}
+						src={Banner}
 						alt="Syd & Co"
 						style={{
+							animation:
+								"float 6s ease-in-out infinite",
 							height: "60px",
 							objectFit: "contain",
 							marginBottom: "32px",
+							borderRadius: "12px",
+							boxShadow: `0 8px 20px ${t.shadow}`,
 						}}
 					/>
 					<h2
@@ -431,9 +402,9 @@ const AboutPage: React.FC = () => {
 							lineHeight: 1.9,
 							marginBottom: "24px",
 						}}>
-						Hey, I'm Syd. I started this brand
-						because I was tired of spending hours
-						searching for beauty and fashion
+						Hey, I&apos;m Syd. I started this
+						brand because I was tired of spending
+						hours searching for beauty and fashion
 						products that actually worked —
 						products that were worth the price,
 						looked amazing, and made me feel like
@@ -483,7 +454,7 @@ const AboutPage: React.FC = () => {
 				</div>
 			</section>
 
-			{/* Values */}
+			{/* Values Section */}
 			<section style={{ padding: "0 24px 80px" }}>
 				<div
 					style={{
@@ -512,9 +483,9 @@ const AboutPage: React.FC = () => {
 								maxWidth: "500px",
 								margin: "0 auto",
 							}}>
-							These aren't just words on a page —
-							they're the principles we live by
-							every day.
+							These aren&apos;t just words on a
+							page — they&apos;re the principles
+							we live by every day.
 						</p>
 					</div>
 					<div
@@ -580,7 +551,7 @@ const AboutPage: React.FC = () => {
 				</div>
 			</section>
 
-			{/* CTA */}
+			{/* CTA Section */}
 			<section style={{ padding: "0 24px 80px" }}>
 				<div
 					style={{
@@ -634,6 +605,9 @@ const AboutPage: React.FC = () => {
 									cursor: "pointer",
 									backdropFilter: "blur(10px)",
 									transition: "all 0.2s",
+									display: "flex",
+									alignItems: "center",
+									gap: "8px",
 								}}
 								onMouseEnter={(e) =>
 									(e.currentTarget.style.background =
@@ -643,14 +617,7 @@ const AboutPage: React.FC = () => {
 									(e.currentTarget.style.background =
 										"rgba(255,255,255,0.15)")
 								}>
-								Shop Now{" "}
-								<ArrowRight
-									size={16}
-									style={{
-										display: "inline",
-										verticalAlign: "middle",
-									}}
-								/>
+								Shop Now <ArrowRight size={16} />
 							</button>
 						</Link>
 						<Link to="/contact">
@@ -674,42 +641,45 @@ const AboutPage: React.FC = () => {
 				</div>
 			</section>
 
+			{/* Responsive Styles */}
 			<style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-12px); }
-        }
         @media (max-width: 768px) {
-          .about-hero-grid {
-            grid-template-columns: 1fr !important;
+          section:first-of-type {
+            height: 450px !important;
           }
-          .about-hero-grid > div:last-child {
-            display: none !important;
+          div[style*="justifyContent: flex-end"] {
+            justify-content: center !important;
+          }
+          div[style*="alignItems: flex-end"] {
+            align-items: center !important;
+            text-align: center !important;
+          }
+          h1 br {
+            display: none;
+          }
+          div[style*="textAlign: right"] {
+            text-align: center !important;
+          }
+          div[style*="alignItems: flex-end"] > div {
+            align-items: center !important;
           }
         }
-
-         @media (max-width: 480px) {
-          .hero-badge { top: 15px; width: 90%; justify-content: center; }
-          .hero-badge span { font-size: 10px; }
-          .feature-pill { font-size: 8px; padding: 2px 10px; }
-          .text-content {
-          padding: 8px !important;
-          backdrop-filter: blur(4px) !important; /* Lighter blur for performance on low-end phones */
-        }
+        @media (max-width: 480px) {
           .about-btns {
             flex-direction: column !important;
-            justify-content: center !important;
-            align-center: center !important;
-            gap: 12px !important;
+            width: 100%;
           }
           .about-btns button {
             width: 100% !important;
             justify-content: center !important;
           }
+          div[style*="maxWidth: 500px"] {
+            max-width: 100% !important;
+          }
         }
       `}</style>
 		</div>
 	);
-}
+};
 
-export default AboutPage
+export default AboutPage;
