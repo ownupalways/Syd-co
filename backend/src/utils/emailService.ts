@@ -13,18 +13,25 @@ const transporter = nodemailer.createTransport({
 });
 
 interface EmailOptions {
-  to: string;
+  to: string | undefined; 
   subject: string;
   html: string;
+  replyTo?: string;      
 }
 
 export const sendEmail = async (options: EmailOptions): Promise<void> => {
+  if (!options.to) {
+    logger.error('Email send failed: No recipient address provided.');
+    return;
+  }
+
   try {
     await transporter.sendMail({
       from: `"${config.email.fromName}" <${config.email.smtpUser}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
+      replyTo: options.replyTo, // Map the replyTo here
     });
     logger.info(`Email sent to ${options.to}`);
   } catch (error) {
@@ -125,4 +132,63 @@ export const emailTemplates = {
       <p style="color:#999;font-size:12px;">You subscribed with: ${email}</p>
     </div>
   `,
-}
+
+    contactInquiry: (name: string, email: string, subject: string, message: string) => `
+
+    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:32px;background:#0A0A0F;color:#F0F0FF;border-radius:16px;">
+
+      <h1 style="color:#FF2D78;margin-bottom:8px;">New Contact Inquiry 📧</h1>
+
+      <p style="color:#94a3b8;margin-bottom:24px;">You have received a new message from the Sydney Shopping contact form.</p>
+
+      
+
+      <div style="background:#1A1A28;border:1px solid rgba(255,45,120,0.2);border-radius:12px;padding:20px;margin-bottom:24px;">
+
+        <p style="margin:0 0 8px;"><strong>From:</strong> ${name}</p>
+
+        <p style="margin:0 0 8px;"><strong>Email:</strong> ${email}</p>
+
+        <p style="margin:0 0 8px;"><strong>Subject:</strong> ${subject}</p>
+
+        <hr style="border:0;border-top:1px solid rgba(255,45,120,0.1);margin:16px 0;" />
+
+        <p style="margin:0;font-weight:700;color:#FF2D78;margin-bottom:8px;">Message:</p>
+
+        <p style="margin:0;color:#94a3b8;line-height:1.6;white-space:pre-wrap;">${message}</p>
+
+      </div>
+
+
+      <p style="color:#94a3b8;font-size:14px;">You can reply directly to this email to contact the user.</p>
+
+    </div>
+
+  `,
+
+};
+
+
+
+
+export const sendContactInquiry = async (data: {
+
+  name: string;
+
+  email: string;
+
+  subject: string;
+
+  message: string;
+
+}) => {
+
+  await sendEmail({
+    to: config.email.smtpUser, // Sending to yourself (the admin)
+    subject: `[Contact Form] ${data.subject}`,
+    html: emailTemplates.contactInquiry(data.name, data.email, data.subject, data.message),
+    replyTo: data.email, // Set the user's email as the reply-to address
+
+  });
+
+};
