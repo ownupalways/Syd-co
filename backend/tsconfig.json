@@ -24,7 +24,8 @@
       "@middleware/*": ["./src/middleware/*"],
       "@utils": ["./src/utils/index.ts"],
       "@utils/*": ["./src/utils/*"],
-      "@appTypes/*": ["./src/types/*"]
+      "@types": ["./src/types/index.ts"],
+      "@types/*": ["./src/types/*"]
     },
 
     "outDir": "./dist",

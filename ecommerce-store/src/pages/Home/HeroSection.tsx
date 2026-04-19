@@ -31,6 +31,9 @@ const HeroSection: React.FC = () => {
 				<img
 					src={Banner}
 					alt="Syd & Co Banner"
+					loading="eager"
+					fetchPriority="high"
+					decoding="async"
 					style={{
 						width: "100%",
 						height: "100%",

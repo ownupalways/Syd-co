@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { Product } from '@models/Product';
 import { sendSuccess, sendError, sendPaginatedResponse } from '@utils/response';
-import { AdminRequest } from '@middleware/adminAuth';
+import { AuthRequest } from '@types'; // Using the global strict type
 import { logAction, createPendingAction } from '@utils/auditLogger';
 import { notifySuperAdmins } from '@utils/socketManager';
 
 export const createProduct = async (
-  req: AdminRequest,
+  req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
@@ -24,8 +24,7 @@ export const createProduct = async (
     } = req.body;
 
     if (!name || !description || !price || !category || !image || !seller) {
-      sendError(res, 'Missing required fields', 400);
-      return;
+      return sendError(res, 'Missing required fields', 400);
     }
 
     const payload = {
@@ -50,21 +49,19 @@ export const createProduct = async (
         payload,
       );
 
-      // Notify super admins in real-time
       notifySuperAdmins('pending-action', {
-        adminName: req.adminName,
+        adminName: req.adminName || 'Unknown Admin',
         action: 'CREATE_PRODUCT',
         resource: 'Product',
         pendingId,
       });
 
-      sendSuccess(
+      return sendSuccess(
         res,
         'Product creation submitted for approval',
         { pendingId },
         202,
       );
-      return;
     }
 
     // Super admin — execute immediately
@@ -84,13 +81,12 @@ export const createProduct = async (
 };
 
 export const updateProduct = async (
-  req: AdminRequest,
+  req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params;
 
-    // Sub-admin actions go to pending queue
     if (req.adminRole === 'sub-admin') {
       const pendingId = await createPendingAction(
         req,
@@ -101,19 +97,18 @@ export const updateProduct = async (
       );
 
       notifySuperAdmins('pending-action', {
-        adminName: req.adminName,
+        adminName: req.adminName || 'Unknown Admin',
         action: 'UPDATE_PRODUCT',
         resource: 'Product',
         pendingId,
       });
 
-      sendSuccess(
+      return sendSuccess(
         res,
         'Product update submitted for approval',
         { pendingId },
         202,
       );
-      return;
     }
 
     const product = await Product.findByIdAndUpdate(id, req.body, {
@@ -122,8 +117,7 @@ export const updateProduct = async (
     });
 
     if (!product) {
-      sendError(res, 'Product not found', 404);
-      return;
+      return sendError(res, 'Product not found', 404);
     }
 
     await logAction(req, 'UPDATE_PRODUCT', 'Product', req.body, id);
@@ -134,13 +128,12 @@ export const updateProduct = async (
 };
 
 export const deleteProduct = async (
-  req: AdminRequest,
+  req: AuthRequest,
   res: Response,
 ): Promise<void> => {
   try {
     const { id } = req.params;
 
-    // Sub-admin actions go to pending queue
     if (req.adminRole === 'sub-admin') {
       const pendingId = await createPendingAction(
         req,
@@ -151,19 +144,18 @@ export const deleteProduct = async (
       );
 
       notifySuperAdmins('pending-action', {
-        adminName: req.adminName,
+        adminName: req.adminName || 'Unknown Admin',
         action: 'DELETE_PRODUCT',
         resource: 'Product',
         pendingId,
       });
 
-      sendSuccess(
+      return sendSuccess(
         res,
         'Product deletion submitted for approval',
         { pendingId },
         202,
       );
-      return;
     }
 
     const product = await Product.findByIdAndUpdate(
@@ -173,8 +165,7 @@ export const deleteProduct = async (
     );
 
     if (!product) {
-      sendError(res, 'Product not found', 404);
-      return;
+      return sendError(res, 'Product not found', 404);
     }
 
     await logAction(
