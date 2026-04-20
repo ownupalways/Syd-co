@@ -9,7 +9,7 @@ import {
   FaSnapchat,
   FaXTwitter,
 } from "react-icons/fa6";
-import api from "../fqapi/axios";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 /* ===================== TYPES ===================== */
