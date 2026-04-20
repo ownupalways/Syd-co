@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Sparkles, ShieldCheck, Truck, Star } from 'lucide-react'
 import { useTheme } from '@context/useTheme'
 import { theme } from '@styles/theme'
-import Banner from '../../assets/Banner.png'
+import Banner from '../../assets/Banner.webp'
 
 const HeroSection: React.FC = () => {
   const { isDark } = useTheme()

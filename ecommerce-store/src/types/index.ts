@@ -94,3 +94,12 @@ export interface ProductFilters {
 	maxPrice?: number;
 	sort?: string;
 }
+
+export interface ForgotPasswordInput {
+    email: string;
+}
+
+export interface GenericAuthResponse {
+    success: boolean;
+    message: string;
+}

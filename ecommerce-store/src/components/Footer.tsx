@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/useTheme";
 import { theme } from "../styles/theme";
-import sydLogo from "../assets/syd-hero.png";
+import sydLogo from "../assets/syd-hero.webp";
 import { Send, Phone, MapPin } from "lucide-react";
 import {
   FaInstagram,

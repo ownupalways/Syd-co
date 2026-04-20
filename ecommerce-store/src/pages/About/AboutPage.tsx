@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '@context/useTheme';
 import { theme } from '@styles/theme';
 import { ArrowRight, Heart, Star, ShoppingBag, Users, Award, Sparkles } from 'lucide-react';
-import Banner from '../../assets/Banner.png';
+import Banner from '../../assets/Banner.webp';
 
 const AboutPage: React.FC = () => {
   const { isDark } = useTheme();

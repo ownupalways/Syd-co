@@ -6,7 +6,7 @@
 // import { theme } from '@styles/theme'
 // import { getProductsApi } from '@api/products'
 // import ProductCard from '@components/ProductCard'
-// import Banner from '../../assets/Banner.png'
+// import Banner from '../../assets/Banner.webp'
 
 // const HomePage: React.FC = () => {
 //   const { isDark } = useTheme()

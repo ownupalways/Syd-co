@@ -1,7 +1,7 @@
 import React from "react";
 import { MessageCircle } from "lucide-react";
 import { ThemeMode } from "@/types/theme";
-import Banner from "@/assets/Banner.png"; // Uncommented
+import Banner from "@/assets/Banner.webp"; // Uncommented
 
 interface HeroProps {
     t: ThemeMode; 

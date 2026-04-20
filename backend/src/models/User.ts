@@ -1,4 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   name: string;
@@ -19,60 +20,35 @@ export interface IUser extends Document {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  // ✅ Added for strict typing
+  comparePassword(password: string): Promise<boolean>;
 }
 
 const userSchema = new Schema<IUser>(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 6,
-      select: false,
-    },
-    phone: {
-      type: String,
-      trim: true,
-    },
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    password: { type: String, required: true, minlength: 6, select: false },
+    phone: { type: String, trim: true },
     address: {
-  type: {
-    fullName: { type: String },
-    phone: { type: String },
-    address: { type: String },
-    city: { type: String },
-    state: { type: String },
-    zipCode: { type: String },
-    country: { type: String },
-  },
-  default: undefined,
-},
-    avatar: {
-      type: String,
+      fullName: String,
+      phone: String,
+      address: String,
+      city: String,
+      state: String,
+      zipCode: String,
+      country: String,
     },
-    role: {
-      type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
-    },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
+    avatar: { type: String },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    isActive: { type: Boolean, default: true },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true }
 );
+
+// ✅ Implementation of the comparison method
+userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
 
 export const User = model<IUser>('User', userSchema);

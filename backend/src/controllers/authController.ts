@@ -1,25 +1,35 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { User } from '@models/User';
-import { hashPassword, comparePassword } from '@utils/helpers';
 import { sendSuccess, sendError } from '@utils/response';
 import { config } from '@config';
+import { AuthRequest } from '@types';
 
 /**
  * Cookie Configuration
  * httpOnly: Prevents JS access (XSS protection)
- * sameSite: 'none' + secure: true is required for cross-domain cookies (Vercel/Render)
+ * sameSite: 'none' + secure: true is required for cross-domain sessions
  */
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: config.nodeEnv === 'production',
-  sameSite: 'none' as const,
+  sameSite: (config.nodeEnv === 'production' ? 'none' : 'lax') as
+    | 'none'
+    | 'lax',
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 Days
+  path: '/',
 };
 
-const generateToken = (id: string, role: string): string => {
-  return jwt.sign({ id, role }, config.jwt.secret as string, {
-    expiresIn: config.jwt.expire as `${number}${'s' | 'm' | 'h' | 'd'}`,
+/**
+ * Helper to generate signed JWT
+ * Uses the standardized 'expiresIn' from your environment config
+ */
+const generateToken = (id: string, role: string, name: string): string => {
+  const secret = config.jwt.secret;
+
+  // No undefined allowed: The 'required' helper in config ensures this exists
+  return jwt.sign({ id, role, name }, secret, {
+    expiresIn: config.jwt.expiresIn,
   });
 };
 
@@ -28,37 +38,39 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     const { name, email, password, phone } = req.body;
 
     if (!name || !email || !password) {
-      sendError(res, 'Name, email and password are required', 400);
-      return;
+      return sendError(res, 'Name, email and password are required', 400);
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      sendError(res, 'User with this email already exists', 409);
-      return;
+      return sendError(res, 'User with this email already exists', 409);
     }
 
-    const hashedPassword = await hashPassword(password);
+    // Mongoose middleware in User.ts handles password hashing automatically
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password,
       phone,
     });
 
-    const token = generateToken(user._id.toString(), user.role);
+    const token = generateToken(user._id.toString(), user.role, user.name);
 
-    // Set the secure cookie
     res.cookie('token', token, COOKIE_OPTIONS);
 
-    sendSuccess(res, 'Registration successful', {
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+    sendSuccess(
+      res,
+      'Registration successful',
+      {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
       },
-    }, 201);
+      201,
+    );
   } catch (error) {
     sendError(res, 'Registration failed', 500);
   }
@@ -69,30 +81,23 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      sendError(res, 'Email and password are required', 400);
-      return;
+      return sendError(res, 'Email and password are required', 400);
     }
 
+    // select('+password') is required because it's hidden in the schema
     const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      sendError(res, 'No account found with this email', 404);
-      return;
+
+    // Using the instance method defined in src/models/User.ts
+    if (!user || !(await user.comparePassword(password))) {
+      return sendError(res, 'Invalid email or password', 401);
     }
 
     if (!user.isActive) {
-      sendError(res, 'Your account has been deactivated', 403);
-      return;
+      return sendError(res, 'Your account has been deactivated', 403);
     }
 
-    const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) {
-      sendError(res, 'Invalid email or password', 401);
-      return;
-    }
+    const token = generateToken(user._id.toString(), user.role, user.name);
 
-    const token = generateToken(user._id.toString(), user.role);
-
-    // Set the secure cookie
     res.cookie('token', token, COOKIE_OPTIONS);
 
     sendSuccess(res, 'Login successful', {
@@ -109,31 +114,34 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const logout = async (_req: Request, res: Response): Promise<void> => {
+  // Options must match the 'set' call exactly to successfully clear
   res.clearCookie('token', {
     ...COOKIE_OPTIONS,
-    maxAge: 0, // Expire immediately
+    maxAge: 0,
   });
+
   sendSuccess(res, 'Logged out successfully', {});
 };
 
-export const getMe = async (req: Request, res: Response): Promise<void> => {
+export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = (req as Request & { userId?: string }).userId;
-    const user = await User.findById(userId);
-    
+    // req.userId is provided by the 'protect' middleware
+    const user = await User.findById(req.userId);
+
     if (!user) {
-      sendError(res, 'User not found', 404);
-      return;
+      return sendError(res, 'User not found', 404);
     }
 
     sendSuccess(res, 'User fetched successfully', {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      avatar: user.avatar,
-      role: user.role,
-      address: user.address,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        avatar: user.avatar,
+        role: user.role,
+        address: user.address,
+      },
     });
   } catch (error) {
     sendError(res, 'Failed to fetch user', 500);

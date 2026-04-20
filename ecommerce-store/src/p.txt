@@ -1,0 +1,6 @@
+src/services/authService.ts
+src/typings/index.ts (or wherever @typings/index resolves to)
+src/pages/Auth/components/ForgotPasswordLink.tsx
+src/pages/Auth/LoginPage.tsx
+src/pages/Auth/RegisterPage.tsx
+src/context/AuthContext.tsx (for the setAuth signature)

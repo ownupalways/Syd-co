@@ -5,7 +5,7 @@ import { useTheme } from '../context/useTheme'
 import { useAuthStore } from '../store/authStore'
 import { useCartStore } from '../store/cartStore'
 import { theme } from '../styles/theme'
-import sydLogo from '../assets/syd-logo.png'
+import sydLogo from '../assets/syd-logo.webp'
 
 export const Navbar: React.FC = () => {
   const { isDark, toggleTheme } = useTheme()
