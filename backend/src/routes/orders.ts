@@ -2,7 +2,8 @@ import { Router, Response } from 'express';
 import Stripe from 'stripe';
 import { Order } from '@models/Order';
 import { Product } from '@models/Product';
-import { protect, AuthRequest } from '@middleware/authMiddleware';
+import { protect } from '@middleware';
+import { AuthRequest } from '@types'; // ✅ Points to your barrel index.ts
 import { sendSuccess, sendError } from '@utils/response';
 import { config } from '@config';
 import { sendEmail, emailTemplates } from '@utils/emailService';

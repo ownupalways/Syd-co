@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { register, login, getMe } from '@controllers/authController';
-import { protect, AuthRequest } from '@middleware/authMiddleware';
+import { protect } from '@middleware';
+import { AuthRequest } from '@types'; // ✅ Points to your barrel index.ts
 import { sendSuccess, sendError } from '@utils/response';
 import { User } from '@models/User';
 const router = Router();
