@@ -32,7 +32,7 @@ export const config = {
   // Database
   mongodb: {
     // Using required() here ensures we don't try to connect to an empty string
-    uri: required('MONGODB_URI'), 
+    uri: required('MONGODB_URI'),
     username: process.env.MONGODB_USERNAME,
     password: process.env.MONGODB_PASSWORD,
   },
@@ -40,7 +40,8 @@ export const config = {
   // JWT
   jwt: {
     secret: required('JWT_SECRET'), // Use required() here for security
-    expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as `${number}${'s' | 'm' | 'h' | 'd'}`,
+    expiresIn: (process.env.JWT_EXPIRES_IN ||
+      '7d') as `${number}${'s' | 'm' | 'h' | 'd'}`,
   },
 
   // CORS
@@ -58,7 +59,8 @@ export const config = {
     smtpUser: process.env.SMTP_USER,
     smtpPassword: process.env.SMTP_PASSWORD,
     fromName: process.env.SMTP_FROM_NAME || 'Sydney Shopping',
-    superAdminEmail: process.env.SUPER_ADMIN_EMAIL || 'superadmin@sydneyshopping.com',
+    superAdminEmail:
+      process.env.SUPER_ADMIN_EMAIL || 'superadmin@sydneyshopping.com',
   },
 
   // Cloudinary
@@ -73,6 +75,12 @@ export const config = {
     publicKey: process.env.STRIPE_PUBLIC_KEY,
     secretKey: process.env.STRIPE_SECRET_KEY,
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+  },
+
+  // Rate Limiting
+  rateLimit: {
+    windowMs: parseInt(process.env.RATE_LIMIT_MINUTES || '15', 10) * 60 * 1000,
+    max: parseInt(process.env.RATE_LIMIT_REQUESTS || '100', 10),
   },
 
   // Helpers for logic throughout the app
